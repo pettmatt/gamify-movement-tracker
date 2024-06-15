@@ -1,7 +1,3 @@
-<script setup lang="ts">
-    import { Trophy, TrophyFill, Archive, ArchiveFill, Geo, GeoFill, Gear, GearFill } from "bootstrap-icons-vue"
-</script>
-
 <template>
 <div id="interface-hud">
     <div class="interface-container">
@@ -23,7 +19,10 @@
 </div>
 </template>
 
-<script>
+<script lang="ts" setup>
+    import { Trophy, TrophyFill, Archive, ArchiveFill, Geo, GeoFill, Gear, GearFill } from "bootstrap-icons-vue"
+    import { sessionStartStatus, traveledDistance, placeMarkersStatus, settingsStatus, historyStatus, highscoresStatus, settingUpSessionStatus } from "../stores/hud-store"
+
     let unit = "m"
     let visibilityTop: boolean
     let visibilityBottom: boolean
@@ -92,7 +91,7 @@
     }
 
     
-    settingUpSessionStatus.subscribe(settingUpBoolean => {
+    settingUpSessionStatus.subscribe((settingUpBoolean: any) => {
         /* Used to setting up the session and hand 
         over the control of the setup phase */
         let enteredSetupMode = false
