@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import Hud from './components/Hud-ui.vue';
+import Hud from "./components/Hud-ui.vue"
+import Map from "./components/Map.vue"
 
 </script>
 

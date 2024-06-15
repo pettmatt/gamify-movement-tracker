@@ -1,11 +1,13 @@
 <template>
 <div id="interface-hud">
     <div class="interface-container">
-        <div class="panel-top" :class="panelTopClasses">
-            <div v-if="sessionStartStatus" id="travel-distance-container">
-                <b>{{ traveledDistance }} {{ unit }}</b>
+        <Transition name="fade-top">
+            <div class="panel-top" :class="panelTopClasses" v-show="sessionStartStatus || false">
+                <div id="travel-distance-container">
+                    <b>{{ traveledDistance }} {{ unit }}</b>
+                </div>
             </div>
-        </div>
+        </Transition>
         <div class="middle-section-panels">
             <div class="panel-left" />
             <div class="panel-middle">
@@ -13,31 +15,26 @@
             <div class="panel-right">
             </div>
         </div>
-        <div class="panel-bottom" :class="fadeInBottom">
-        </div>
+        <Transition name="fade-bottom">
+            <div class="panel-bottom" v-show="visibilityBottom">
+                bottom
+            </div>
+        </Transition>
     </div>
 </div>
 </template>
 
 <script lang="ts" setup>
-    import { Trophy, TrophyFill, Archive, ArchiveFill, Geo, GeoFill, Gear, GearFill } from "bootstrap-icons-vue"
-    import { sessionStartStatus, traveledDistance, placeMarkersStatus, settingsStatus, historyStatus, highscoresStatus, settingUpSessionStatus } from "../stores/hud-store"
+    // import { Trophy, TrophyFill, Archive, ArchiveFill, Geo, GeoFill, Gear, GearFill } from "bootstrap-icons-vue"
+    // import { sessionStartStatus, traveledDistance, placeMarkersStatus, settingsStatus, historyStatus, highscoresStatus, settingUpSessionStatus } from "../stores/hud-store"
+    import { onMounted, computed, onBeforeUnmount } from "vue"
 
     let unit = "m"
     let visibilityTop: boolean
     let visibilityBottom: boolean
     let inActivity: any
-
-    onMounted(() => {
-        visibilityTop = false
-        visibilityBottom = true
-
-        addInactivityTimers()
-    })
-
-    beforeUnmount(() => { // Same as onDestroy()
-        removeInactivityTimers()
-    })
+    let sessionStartStatus: any // remove later
+    let traveledDistance: any // remove later
 
     const panelTopClasses = computed(() => {
         return {
@@ -90,15 +87,25 @@
         visibilityBottom = true
     }
 
-    
-    settingUpSessionStatus.subscribe((settingUpBoolean: any) => {
-        /* Used to setting up the session and hand 
-        over the control of the setup phase */
-        let enteredSetupMode = false
+    onMounted(() => {
+        visibilityTop = false
+        visibilityBottom = true
 
-        if (settingUpBoolean)
-            enteredSetupMode = true
+        addInactivityTimers()
     })
+
+    onBeforeUnmount(() => { // Same as onDestroy()
+        removeInactivityTimers()
+    })
+    
+    // settingUpSessionStatus.subscribe((settingUpBoolean: any) => {
+    //     /* Used to setting up the session and hand 
+    //     over the control of the setup phase */
+    //     let enteredSetupMode = false
+
+    //     if (settingUpBoolean)
+    //         enteredSetupMode = true
+    // })
 </script>
 
 <style scoped>
@@ -168,28 +175,32 @@
     }
 
     /* Animations */
-    .fade-out-top {
+    .fade-top-leave-from,
+    .fade-top-leave-to {
         opacity: 0;
         transform: translateY(0%);
         transition:
             opacity 0.3s ease-in-out,
             transform 0.5s ease-in-out;
     }
-    .fade-in-top {
+    .fade-top-enter-active,
+    .fade-top-leave-active {
         opacity: 1;
         transform: translateY(10%);
         transition:
             opacity 0.3s ease-in-out,
             transform 0.5s ease-in-out;
     }
-    .fade-out-bottom {
+    .fade-bottom-enter-from,
+    .fade-bottom-leave-to {
         opacity: 0;
         transform: translateY(50%);
         transition:
             opacity 0.3s ease-in-out,
             transform 0.5s ease-in-out;
     }
-    .fade-in-bottom {
+    .fade-bottom-enter-active,
+    .fade-bottom-leave-active {
         opacity: 1;
         transform: translateY(0%);
         transition:
