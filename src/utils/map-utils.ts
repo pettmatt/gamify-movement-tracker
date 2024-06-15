@@ -1,6 +1,6 @@
 // File includes functionalities that are custom made for the map.
 // More standard functionalities are still included in the Map component.
-import { traveledDistance } from "../stores/hud-store"
+// import { traveledDistance } from "../stores/hud-store"
 import type { Waypoints, UserTracking, DistanceProvider } from "../interfaces/map-interfaces"
 
 const checkIfFinished = (waypointDetails: Waypoints, totalDistances: DistanceProvider) => {
@@ -55,7 +55,7 @@ export const calculateNewTraveledDistance = (map: any, coordinates: Array<Array<
     const distance = map.distance(coordinates[0], coordinates[coordinates.length - 1])
     const newDistance = currentSum + distance
     // Update the travel distance
-    traveledDistance.update(value => newDistance)
+    // traveledDistance.update(value => newDistance)
 
     return newDistance
 }
