@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import TheHud from "./components/TheHud.vue"
 import LeafletMap from "./components/LeafletMap.vue"
-import { sessionStore } from "./stores/hud-store"
 </script>
 
 <template>
