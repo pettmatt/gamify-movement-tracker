@@ -11,7 +11,13 @@
         <div class="panel-middle"></div>
         <Transition name="fade-bottom">
             <div class="panel-bottom" v-show="visibilityBottom">
-                bottom
+                <ToggleButton v-for="(slot, index) in menu"
+                    :key="index"
+                    :label="slot.label"
+                    :icons="slot.icons"
+                    :value="Boolean(evaluateExpression(slot.value))"
+                    :store="evaluateExpression(slot.store)"
+                />
             </div>
         </Transition>
     </div>
@@ -22,6 +28,9 @@
 // import { Trophy, TrophyFill, Archive, ArchiveFill, Geo, GeoFill, Gear, GearFill } from "bootstrap-icons-vue"
 // import { sessionStartStatus, traveledDistance, placeMarkersStatus, settingsStatus, historyStatus, highscoresStatus, settingUpSessionStatus } from "../stores/hud-store"
 import { onMounted, computed, onBeforeUnmount } from "vue"
+import ToggleButton from "./UI/ToggleButton.vue"
+import menu from "@/structure/hud/bottom-panel.json"
+import { evaluateExpression } from "@/utils/json-utils"
 
 let unit = "m"
 let visibilityTop: boolean

@@ -6,12 +6,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue"
-
-interface ToggleIcon {
-    default: Function,
-    checked: Function
-}
+import { reactive, computed } from "vue"
 
 const props = defineProps({
     label: {
@@ -19,8 +14,8 @@ const props = defineProps({
         default: "Label"
     },
     icons: {
-        type: ToggleIcon,
-        default: { default: null, checked: null }
+        type: Object,
+        default: () => ({ default: null, checked: null })
     },
     value: {
         type: Boolean,
@@ -28,18 +23,18 @@ const props = defineProps({
     },
     store: {
         type: Object,
-        default: reactive(false)
+        default: reactive({ value: false })
     },
     storeUpdateFunction: {
         type: Function,
-        default: (boolean) => !boolean
+        default: (boolean: boolean) => !boolean
     }
 })
 
 const currentIcon = computed(() => (props.value ? props.icons.checked : props.icons.default))
 
 function handleClick() {
-    props.store.update(props.storeUpdateFunction)
+    props.store.value.update(props.storeUpdateFunction)
 }
 </script>
 

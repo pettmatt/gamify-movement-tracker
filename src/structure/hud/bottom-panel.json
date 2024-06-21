@@ -1,0 +1,29 @@
+[
+    {
+        "label": "History",
+        "icons": {
+            "default": "Archive",
+            "checked": "ArchiveFill"
+        },
+        "value": "historyStatus || false",
+        "store": "historyStatus"
+    },
+    {
+        "label": "Session",
+        "icons": {
+            "default": "Geo",
+            "checked": "GeoFill"
+        },
+        "value": "settingUpSessionStatus || false",
+        "store": "settingUpSessionStatus"
+    },
+    {
+        "label": "Settings",
+        "icons": {
+            "default": "Archive",
+            "checked": "ArchiveFill"
+        },
+        "value": "HistoryStatus || false",
+        "store": "HistoryStatus"
+    }
+]
