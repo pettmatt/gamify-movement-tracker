@@ -1,5 +1,5 @@
 import { reactive } from "vue"
-import type { sessionStoreInterface } from "./hud-store-interfaces"
+import type { sessionStoreInterface } from "./hud-store-interface"
 
 export const sessionStore = reactive<sessionStoreInterface>({
     // Booleans
