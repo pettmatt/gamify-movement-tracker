@@ -11,13 +11,13 @@
         <div class="panel-middle"></div>
         <Transition name="fade-bottom">
             <div class="panel-bottom" v-show="visibilityBottom">
-                <ToggleButton v-for="(slot, index) in menu"
+                <!-- <ToggleButton v-for="(slot, index) in menu"
                     :key="index"
                     :label="slot.label"
                     :icons="slot.icons"
                     :value="Boolean(evaluateExpression(slot.value))"
                     :store="evaluateExpression(slot.store)"
-                />
+                /> -->
             </div>
         </Transition>
     </div>
