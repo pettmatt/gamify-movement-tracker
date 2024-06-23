@@ -9,12 +9,13 @@
 </template>
 
 <script lang="ts" setup>
-import * as L from "leaflet"
-import "leaflet/dist/leaflet.css"
-// import { createLoopFunction, createRouteFunction, sessionMarkers, placeMarkersStatus, plannedLength, removeLastMarker, removeMarkersFunction, routeLength, sessionStartStatus, traveledDistance } from "../stores/hud-store"
+import { watch } from "vue"
+import { sessionStore } from "../stores/hud-store"
 import * as LeafletRouting from "../services/leaflet-routing-machine"
 import * as mapUtils from "../utils/map-utils"
 import type { Waypoints, UserTracking, DistanceProvider } from "../interfaces/map-interfaces"
+import * as L from "leaflet"
+import "leaflet/dist/leaflet.css"
 
 let map: any
 
@@ -43,7 +44,7 @@ let totalDistances: DistanceProvider = {
     }
 }
 
-const createMap = (container: any) => {
+function createMap(container: any) {
     let map = L.map(container).setView([50.08804, 14.42076], 5)
     L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
@@ -55,18 +56,16 @@ const createMap = (container: any) => {
     ).addTo(map)
 
     // Put marker down on click
-    const placeMarker = (e: any) => {
+    function placeMarker(e: any) {
         const marker = L.marker()
         const coordinates = e.latlng
 
         waypointDetails.coordinates.push(coordinates) // Used to get the coordinates easily
-        // waypointDetails.markers.push(marker) // Used to get easy access to the markers
+        waypointDetails.markers.push(marker) // Used to get easy access to the markers
 
         drawLine(waypointDetails.coordinates, "plan")
-
         let markerDistances = totalDistances.planned.markerDistances
-
-        // marker.setLatLng(coordinates, { draggable: true }).addTo(map)
+        marker.setLatLng(coordinates, { draggable: true }).addTo(map)
 
         if (markerDistances.length < 1) {
             marker.bindPopup(`Starting point`)
@@ -83,17 +82,17 @@ const createMap = (container: any) => {
         }
 
         map.addLayer(marker)
-        // sessionMarkers.set(waypointDetails)
+        sessionStore.sessionMarkers = waypointDetails
     }
 
-    map.on("click", ($event: any) => {
-        // if ($placeMarkersStatus) placeMarker($event)
+    map.on("click", (event: any) => {
+        if (sessionStore.placeMarkersStatus) placeMarker(event)
     })
 
-    const createLoop = (coordinates: Array<Array<number>>) => {
+    function createLoop(coordinates: Array<Array<number>>) {
         // Makes the route "loopable", bringing the user back to the starting point.
         if (coordinates.length > 2) {
-            // waypointDetails.polyline = L.polyline([...coordinates, coordinates[0]]).addTo(map)
+            waypointDetails.polyline = L.polyline([...coordinates, coordinates[0]]).addTo(map)
             // Pushing the first point again makes sure the routing plugin 
             // displays the route correctly as a loop.
             waypointDetails.coordinates.push(coordinates[0])
@@ -102,55 +101,54 @@ const createMap = (container: any) => {
 
     }
 
-    // createLoopFunction.set(() => createLoop(waypointDetails.coordinates))
+    sessionStore.createLoopFunction = () => createLoop(waypointDetails.coordinates)
 
     // Locate user
     let trackingInterval = null
 
-    // sessionStartStatus.subscribe(sessionStarted => {
-    //     // Check if user has activated tracking through clicking on an element.
-    //     if (sessionStarted) {
-    //         if (!navigator.permissions) {
-    //             console.warn("The browser doesn't support geolocating the user.")
-    //             return
-    //         }
+    watch(sessionStore.sessionStartStatus, (sessionStarted) => {
+        // Check if user has activated tracking through clicking on an element.
+        if (sessionStarted) {
+            if (!navigator.permissions) {
+                console.warn("The browser doesn't support geolocating the user.")
+                return
+            }
 
-    //         console.log("Starting geotracking")
+            console.log("Starting geotracking")
 
-    //         map.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true })
+            map.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true })
 
-    //         map.on("locationfound", (e: any) => {
-    //             userTracking.currentLocation = L.marker()
+            map.on("locationfound", (e: any) => {
+                userTracking.currentLocation = L.marker()
+                // Locate and show user's location immediately
+                trackUser(e)
 
-    //             // Locate and show user's location immediately
-    //             trackUser(e)
+                trackingInterval = setInterval(() => {
+                    // Now update the location every 2 seconds
+                    trackUser(e)
+                }, 2000)
+            })
 
-    //             trackingInterval = setInterval(() => {
-    //                 // Now update the location every 2 seconds
-    //                 trackUser(e)
-    //             }, 2000)
-    //         })
+            map.on("locationerror", (e: any) => {
+                console.warn(e.message)
+                clearTimeout(trackingInterval)
+                sessionStore.sessionStartStatus = false
+            })
+        }
 
-    //         map.on("locationerror", (e: any) => {
-    //             console.warn(e.message)
-    //             clearTimeout(trackingInterval)
-    //             sessionStartStatus.set(false)
-    //         })
-    //     }
-
-    //     else {
-    //         clearTrackingHistory(map)
-    //         clearMapMarkersAndPolylines(map)
-    //         clearTimeout(trackingInterval)
-    //         trackingInterval = null
-    //         console.log("Cleaning and stopping geotracking")
-    //     }
-    // })
+        else {
+            clearTrackingHistory(map)
+            clearMapMarkersAndPolylines(map)
+            clearTimeout(trackingInterval)
+            trackingInterval = null
+            console.log("Cleaning and stopping geotracking")
+        }
+    })
 
     return map
 }
 
-const mapAction = (container: any) => {
+function mapAction(container: any) {
     map = createMap(container)
     return {
         destroy: () => {
@@ -159,12 +157,12 @@ const mapAction = (container: any) => {
     }
 }
 
-const resizeMap = () => {
+function resizeMap() {
     if (map) map.invalidateSize()
 }
 
 // Draw a line from marker to marker
-const drawLine = (coordinates: Array<Array<number>>, lineType: string = "plan" || "track") => {
+function drawLine(coordinates: Array<Array<number>>, lineType: string = "plan" || "track") {
     if (coordinates.length < 2) return
 
     // Reset polyline, so the previous values won't become a problem
@@ -192,7 +190,7 @@ const drawLine = (coordinates: Array<Array<number>>, lineType: string = "plan" |
     }
 }
 
-const trackUser = (e: any) => {
+function trackUser(e: any) {
     // Sometimes the hook is unable to provide coordinates.
     if (e === null || e.latlng === undefined) {
         console.log("No coordinates found. Skipping this iteration.")
@@ -210,10 +208,10 @@ const trackUser = (e: any) => {
     drawLine(userTracking.coordinates, "track")
 
     const newDistance = mapUtils.compareLocationWithNextMarker(waypointDetails, totalDistances, userTracking)
-    // totalDistances.traveled = newDistance
+    totalDistances.traveled = newDistance
 }
 
-const calculateNewLineLength = (coordinates: Array<Array<number>>) => {
+function calculateNewLineLength(coordinates: Array<Array<number>>) {
     const distance = map.distance(
         coordinates[totalDistances.planned.markerDistances.length],
         coordinates[coordinates.length - 1]
@@ -221,10 +219,10 @@ const calculateNewLineLength = (coordinates: Array<Array<number>>) => {
 
     totalDistances.planned.markerDistances.push(distance)
     // Update the store values so the HUD can show the planned distance
-    // plannedLength.set(totalDistances.planned.getSum())
+    sessionStore.plannedLength = totalDistances.planned.getSum()
 }
 
-const clearTrackingHistory = (map: any) => {
+function clearTrackingHistory(map: any) {
     map.removeLayer(userTracking.currentLocation)
     map.removeLayer(userTracking.coordinates)
 
@@ -232,7 +230,7 @@ const clearTrackingHistory = (map: any) => {
     userTracking.coordinates = []
 }
 
-const clearMapMarkersAndPolylines = (map: any) => {
+function clearMapMarkersAndPolylines(map: any) {
     map.eachLayer((layer: any) => {
         if (layer instanceof L.Marker || layer instanceof L.Polyline) {
             map.removeLayer(layer)
@@ -247,26 +245,26 @@ const clearMapMarkersAndPolylines = (map: any) => {
 
     totalDistances.planned.markerDistances = []
 
-    // plannedLength.set(0)
-    // routeLength.set(0)
+    sessionStore.plannedLength = 0
+    sessionStore.routeLength = 0
 }
 
-const showPlanningMarkers = () => {
-
-}
-
-const hidePlanningMarkers = () => {
+function showPlanningMarkers() {
 
 }
 
-const createLeafletRouting = () => {
+function hidePlanningMarkers() {
+
+}
+
+function createLeafletRouting() {
     // At this time I'm unable to calculate the distance of the route which is provided by the routing plugin
     const route = LeafletRouting.createRoute(L, map, generatedRoute, waypointDetails.coordinates)
     // console.log(route.getRouter())
     // routeLength.set(calculateDistanceOfRoute(route))
 }
 
-const checkLayers = () => {
+function checkLayers() {
     let markercount = 0
     let polylineCount = 0
     map.eachLayer((layer: any) => {
@@ -283,6 +281,6 @@ const checkLayers = () => {
 
 // Pass functions that need map parameters to hud-store.
 // When necessary the function is passed else where in this file.
-// removeMarkersFunction.set(() => clearMapMarkersAndPolylines(map))
-// createRouteFunction.set(() => createLeafletRouting())
+sessionStore.removeMarkersFunction = () => clearMapMarkersAndPolylines(map)
+sessionStore.createRouteFunction = () => createLeafletRouting()
 </script>

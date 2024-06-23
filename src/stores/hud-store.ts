@@ -1,6 +1,7 @@
 import { reactive } from "vue"
+import type { sessionStoreInterface } from "./hud-store-interfaces"
 
-export const sessionStore = reactive({
+export const sessionStore = reactive<sessionStoreInterface>({
     // Booleans
     settingUpSessionStatus: false,
     sessionStartStatus: false,
