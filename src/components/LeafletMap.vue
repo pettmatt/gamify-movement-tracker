@@ -5,11 +5,11 @@
             crossorigin=""
         />
     </teleport>
-    <div id="leaf-map" style="height: 100%; background-color: #333;" />
+    <div id="leaf-map" style="height: 100%; background-color: #333;" v-map-action />
 </template>
 
 <script lang="ts" setup>
-import { watch } from "vue"
+import { onBeforeMount, onMounted, watch } from "vue"
 import { sessionStore } from "../stores/hud-store"
 import * as L from "leaflet"
 import "leaflet/dist/leaflet.css"
@@ -104,7 +104,7 @@ function createMap(container: any) {
     // Locate user
     let trackingInterval: ReturnType<typeof setInterval | any> = null
 
-    watch(sessionStore.sessionStartStatus, (sessionStarted) => {
+    watch(() => sessionStore.sessionStartStatus, (sessionStarted) => {
         // Check if user has activated tracking through clicking on an element.
         if (sessionStarted) {
             if (!navigator.permissions) {
@@ -146,12 +146,14 @@ function createMap(container: any) {
     return map
 }
 
-function mapAction(container: any) {
-    map = createMap(container)
-    return {
-        destroy: () => {
-            map.remove
-        }
+const vMapAction = {
+    mounted: (container: HTMLDivElement) => {
+        console.log("Creating Leaflet map")
+        map = createMap(container)
+    },
+    unmounted() {
+        console.log("Removing Leaflet map")
+        map.remove
     }
 }
 
@@ -281,4 +283,11 @@ function checkLayers() {
 // When necessary the function is passed else where in this file.
 sessionStore.removeMarkersFunction = () => clearMapMarkersAndPolylines(map)
 sessionStore.createRouteFunction = () => createLeafletRouting()
+
+onMounted(() => {
+    window.addEventListener('leaflet-map-resize', resizeMap);
+})
+onBeforeMount(() => {
+    window.removeEventListener('leaflet-map-resize', resizeMap);
+})
 </script>
