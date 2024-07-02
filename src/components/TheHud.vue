@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, computed, onBeforeUnmount } from "vue"
+import { onMounted, computed, onBeforeUnmount, watch } from "vue"
 import { sessionStore, settingsStore } from "../stores/hud-store"
 import { Trophy, TrophyFill, Archive, ArchiveFill, Geo, GeoFill, Gear, GearFill } from "bootstrap-icons-vue"
 import { evaluateExpression } from "@/utils/json-utils"
@@ -96,19 +96,18 @@ onMounted(() => {
 
     addInactivityTimers()
 })
-
-onBeforeUnmount(() => { // Same as onDestroy()
+onBeforeUnmount(() => {
     removeInactivityTimers()
 })
 
-// settingUpSessionStatus.subscribe((settingUpBoolean: any) => {
-//     /* Used to setting up the session and hand 
-//     over the control of the setup phase */
-//     let enteredSetupMode = false
+watch(() => sessionStore.settingUpSessionStatus, (settingUpBoolean: any) => {
+    /* Used to setting up the session and hand 
+    over the control of the setup phase */
+    let enteredSetupMode = false
 
-//     if (settingUpBoolean)
-//         enteredSetupMode = true
-// })
+    if (settingUpBoolean)
+        enteredSetupMode = true
+})
 </script>
 
 <style scoped>
