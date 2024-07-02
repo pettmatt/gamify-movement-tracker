@@ -113,9 +113,7 @@ function createMap(container: any) {
             }
 
             console.log("Starting geotracking")
-
             map.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true })
-
             map.on("locationfound", (e: any) => {
                 userTracking.currentLocation = L.marker()
                 // Locate and show user's location immediately
