@@ -11,11 +11,11 @@
 <script lang="ts" setup>
 import { watch } from "vue"
 import { sessionStore } from "../stores/hud-store"
+import * as L from "leaflet"
+import "leaflet/dist/leaflet.css"
 import * as LeafletRouting from "../services/leaflet-routing-machine"
 import * as mapUtils from "../utils/map-utils"
 import type { Waypoints, UserTracking, DistanceProvider } from "../interfaces/map-interfaces"
-import * as L from "leaflet"
-import "leaflet/dist/leaflet.css"
 
 let map: any
 
@@ -55,7 +55,7 @@ function createMap(container: any) {
         }
     ).addTo(map)
 
-    // Put marker down on click
+    //  On click, put marker down
     function placeMarker(e: any) {
         const marker = L.marker()
         const coordinates = e.latlng
@@ -84,7 +84,6 @@ function createMap(container: any) {
         map.addLayer(marker)
         sessionStore.sessionMarkers = waypointDetails
     }
-
     map.on("click", (event: any) => {
         if (sessionStore.placeMarkersStatus) placeMarker(event)
     })
@@ -100,11 +99,10 @@ function createMap(container: any) {
         }
 
     }
-
     sessionStore.createLoopFunction = () => createLoop(waypointDetails.coordinates)
 
     // Locate user
-    let trackingInterval = null
+    let trackingInterval: ReturnType<typeof setInterval | any> = null
 
     watch(sessionStore.sessionStartStatus, (sessionStarted) => {
         // Check if user has activated tracking through clicking on an element.
