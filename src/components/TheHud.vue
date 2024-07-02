@@ -25,9 +25,9 @@
 </template>
 
 <script lang="ts" setup>
-// import { Trophy, TrophyFill, Archive, ArchiveFill, Geo, GeoFill, Gear, GearFill } from "bootstrap-icons-vue"
-// import { sessionStartStatus, traveledDistance, placeMarkersStatus, settingsStatus, historyStatus, highscoresStatus, settingUpSessionStatus } from "../stores/hud-store"
 import { onMounted, computed, onBeforeUnmount } from "vue"
+import { sessionStore, settingsStore } from "../stores/hud-store"
+import { Trophy, TrophyFill, Archive, ArchiveFill, Geo, GeoFill, Gear, GearFill } from "bootstrap-icons-vue"
 import { evaluateExpression } from "@/utils/json-utils"
 import menu from "@/structure/hud/bottom-panel.json"
 import ToggleButton from "./UI/ToggleButton.vue"
@@ -36,8 +36,8 @@ let unit = "m"
 let visibilityTop: boolean
 let visibilityBottom: boolean
 let inActivity: any
-let sessionStartStatus: any // remove later
-let traveledDistance: any // remove later
+// let sessionStartStatus: any // remove later
+// let traveledDistance: any // remove later
 
 const panelTopClasses = computed(() => {
     return {
