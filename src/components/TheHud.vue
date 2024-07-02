@@ -28,9 +28,9 @@
 // import { Trophy, TrophyFill, Archive, ArchiveFill, Geo, GeoFill, Gear, GearFill } from "bootstrap-icons-vue"
 // import { sessionStartStatus, traveledDistance, placeMarkersStatus, settingsStatus, historyStatus, highscoresStatus, settingUpSessionStatus } from "../stores/hud-store"
 import { onMounted, computed, onBeforeUnmount } from "vue"
-import ToggleButton from "./UI/ToggleButton.vue"
-import menu from "@/structure/hud/bottom-panel.json"
 import { evaluateExpression } from "@/utils/json-utils"
+import menu from "@/structure/hud/bottom-panel.json"
+import ToggleButton from "./UI/ToggleButton.vue"
 
 let unit = "m"
 let visibilityTop: boolean

@@ -183,7 +183,6 @@ function drawLine(coordinates: Array<Array<number>>, lineType: string = "plan" |
         // This will be the fix to the issue pointed above, for now.
         userTracking.polyline = L.polyline(coordinates).addTo(map)
         map.addLayer(userTracking.polyline)
-
         mapUtils.calculateNewTraveledDistance(map, coordinates, totalDistances.traveled.sum)
     }
 }
