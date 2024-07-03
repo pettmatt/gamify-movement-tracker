@@ -20,25 +20,7 @@ export const sessionStore = reactive<sessionStoreInterface>({
     getMapStatistics: undefined,
     // User session settings
     // These values are meant to be stored and displayed in History / Highscore menu
-    sessionMarkers: undefined,
-    goal: {
-        category: undefined,
-        goal: {
-            markers: undefined,
-            estimatedDistance: undefined,
-            lengthSpecified: false,
-            distance: undefined,
-            time: undefined,
-        },
-        session: {
-            routeCoordinates: undefined,
-            markerCount: undefined,
-            passedThroughMarkers: undefined,
-            distance: undefined,
-            startingTime: undefined,
-            endTimer: undefined
-        }
-    }
+    sessionMarkers: undefined
 })
 
 export const sessionDetails = reactive<sessionDetailsInterface>({

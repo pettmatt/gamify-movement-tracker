@@ -25,7 +25,7 @@ export interface sessionStoreInterface {
 export interface sessionDetailsInterface {
     category: undefined | string,
     goal: {
-        markers: undefined | number[],
+        markers: undefined | number[][],
         estimatedDistance: undefined | number,
         lengthSpecified: boolean,
         distance: undefined | number,

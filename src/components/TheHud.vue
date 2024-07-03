@@ -2,22 +2,30 @@
 <div id="interface-hud">
     <div class="interface-container">
         <Transition name="fade-top">
-            <div class="panel-top" :class="panelTopClasses" v-show="sessionStartStatus || false">
+            <div class="panel-top" :class="panelTopClasses" v-show="sessionStore.sessionStartStatus || false">
                 <div id="travel-distance-container">
-                    <b>{{ traveledDistance }} {{ unit }}</b>
+                    <b>{{ sessionStore.traveledDistance }} {{ unit }}</b>
                 </div>
             </div>
         </Transition>
-        <div class="panel-middle"></div>
+        <div class="panel-middle">
+            <NotificationBox :position="(sessionStore.placeMarkersStatus) ? 'top' : 'default'">
+                <div>
+                    <SessionMenu v-if="sessionStore.sessionStartStatus" />
+                    <PlaceMarkersMenu v-else-if="sessionStore.placeMarkersStatus" />
+                    <SettingUpSession v-else-if="!sessionStore.placeMarkersStatus" />
+                </div>
+            </NotificationBox>
+        </div>
         <Transition name="fade-bottom">
             <div class="panel-bottom" v-show="visibilityBottom">
-                <!-- <ToggleButton v-for="(slot, index) in menu"
+                <ToggleButton v-for="(slot, index) in menu"
                     :key="index"
                     :label="slot.label"
                     :icons="slot.icons"
                     :value="Boolean(evaluateExpression(slot.value))"
                     :store="evaluateExpression(slot.store)"
-                /> -->
+                />
             </div>
         </Transition>
     </div>
@@ -31,13 +39,14 @@ import { Trophy, TrophyFill, Archive, ArchiveFill, Geo, GeoFill, Gear, GearFill 
 import { evaluateExpression } from "@/utils/json-utils"
 import menu from "@/structure/hud/bottom-panel.json"
 import ToggleButton from "./UI/ToggleButton.vue"
+import SessionMenu from "./UI/SessionMenu.vue"
+import PlaceMarkersMenu from "./UI/PlaceMarkersMenu.vue"
+import SettingUpSession from "./UI/SettingUpSession.vue"
 
 let unit = "m"
 let visibilityTop: boolean
 let visibilityBottom: boolean
 let inActivity: any
-// let sessionStartStatus: any // remove later
-// let traveledDistance: any // remove later
 
 const panelTopClasses = computed(() => {
     return {
