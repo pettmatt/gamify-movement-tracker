@@ -1,5 +1,5 @@
 import { reactive } from "vue"
-import type { sessionStoreInterface } from "./hud-store-interface"
+import type { sessionStoreInterface, sessionDetailsInterface } from "./hud-store-interface"
 
 export const sessionStore = reactive<sessionStoreInterface>({
     // Booleans
@@ -41,6 +41,25 @@ export const sessionStore = reactive<sessionStoreInterface>({
     }
 })
 
+export const sessionDetails = reactive<sessionDetailsInterface>({
+    category: undefined,
+    goal: {
+        markers: undefined,
+        estimatedDistance: undefined,
+        lengthSpecified: false,
+        distance: undefined,
+        time: undefined,
+    },
+    session: {
+        routeCoordinates: undefined,
+        markerCount: undefined,
+        passedThroughMarkers: undefined,
+        distance: undefined,
+        startingTime: undefined,
+        endTimer: undefined
+    }
+})
+
 export const settingsStore = reactive({
     settingsStatus: false,
     settings: {
@@ -48,7 +67,7 @@ export const settingsStore = reactive({
             display: {
                 // fadeTopOnIdle: getItemFromLocalStorage("fadeTopOnIdle"),
                 // fadeRightOnIdle: getItemFromLocalStorage("fadeRightOnIdle"),
-                // fadeBottomOnIdle: getItemFromLocalStorage("fadeBottomOnIdle"),
+                // fadeBottomOnIdle: getItemFromLocalStorage("fadeBottomOnIdle")
             },
             functionality: {
                 // enableIdle: getItemFromLocalStorage("fadeBottomOnIdle"),
@@ -58,7 +77,7 @@ export const settingsStore = reactive({
         appFunctionality: {
             general: {
                 // offlineMode: getItemFromLocalStorage("offlineMode"),
-                units: { name: "metric", unit: "m"} || { name: "imperial", unit: ""}
+                units: { name: "metric", unit: "m" } || { name: "imperial", unit: "" }
             },
             services: {
                 // allowThirdPartyServices: getItemFromLocalStorage("allowThirdPartyServices")
