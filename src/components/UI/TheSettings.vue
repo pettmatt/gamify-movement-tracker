@@ -11,9 +11,6 @@
                     Fade top display bar on idle <input type="checkbox" :checked="appSettings.menus.display.fadeTopOnIdle" :change="onInputChange" name="fadeTopOnIdle" />
                 </li>
                 <li>
-                    Fade right menu on idle <input type="checkbox" :checked="appSettings.menus.display.fadeRightOnIdle" :change="onInputChange" name="fadeRightOnIdle" />
-                </li>
-                <li>
                     Fade bottom menu on idle <input type="checkbox" :checked="appSettings.menus.display.fadeBottomOnIdle" :change="onInputChange" name="fadeBottomOnIdle" />
                 </li>
             </ul>
