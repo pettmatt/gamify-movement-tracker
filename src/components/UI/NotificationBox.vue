@@ -1,9 +1,7 @@
 <template>
-<main>
-    <div id="notification-box" :class="props?.position">
-        <slot></slot>
-    </div>
-</main>
+<div id="notification-box" :class="props.position">
+    <slot></slot>
+</div>
 </template>
 
 <script setup lang="ts">
@@ -12,7 +10,7 @@ const props = defineProps({
 })
 </script>
 
-<style>
+<style scoped>
 #notification-box {
     border-radius: 0.5em;
     display: flex;
@@ -27,6 +25,7 @@ const props = defineProps({
 }
 #notification-box {
     pointer-events: all;
+    z-index: 999;
 }
 .default {
     margin: auto;

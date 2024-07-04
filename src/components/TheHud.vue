@@ -23,8 +23,8 @@
                     :key="index"
                     :label="slot.label"
                     :icons="slot.icons"
-                    :value="Boolean(evaluateExpression(slot.value))"
-                    :store="evaluateExpression(slot.store)"
+                    :value="Boolean(evaluateExpression(slot.value, { sessionStore }))"
+                    :store="evaluateExpression(slot.store, { sessionStore })"
                 />
             </div>
         </Transition>
@@ -42,6 +42,7 @@ import ToggleButton from "./UI/ToggleButton.vue"
 import SessionMenu from "./UI/SessionMenu.vue"
 import PlaceMarkersMenu from "./UI/PlaceMarkersMenu.vue"
 import SettingUpSession from "./UI/SettingUpSession.vue"
+import NotificationBox from "./UI/NotificationBox.vue"
 
 let unit = "m"
 let visibilityTop: boolean

@@ -5,8 +5,8 @@
             "default": "Archive",
             "checked": "ArchiveFill"
         },
-        "value": "historyStatus || false",
-        "store": "historyStatus"
+        "value": "sessionStore.historyStatus || false",
+        "store": "sessionStore.historyStatus"
     },
     {
         "label": "Session",
@@ -14,16 +14,16 @@
             "default": "Geo",
             "checked": "GeoFill"
         },
-        "value": "settingUpSessionStatus || false",
-        "store": "settingUpSessionStatus"
+        "value": "sessionStore.settingUpSessionStatus || false",
+        "store": "sessionStore.settingUpSessionStatus"
     },
     {
         "label": "Settings",
         "icons": {
-            "default": "Archive",
-            "checked": "ArchiveFill"
+            "default": "Gear",
+            "checked": "GearFill"
         },
-        "value": "HistoryStatus || false",
-        "store": "HistoryStatus"
+        "value": "sessionStore.settingsStatus || false",
+        "store": "sessionStore.settingsStatus"
     }
 ]
