@@ -37,15 +37,8 @@ const goalTime = ref(20)
 const goalDistance = ref(2.5)
 const sessionCategory = ref("")
 
-function toggleSpecifySessionLength() {
-    specifySessionLength.value = !specifySessionLength.value
-}
 function planSessionRoute() {
     sessionStore.placeMarkersStatus = !sessionStore.placeMarkersStatus
-}
-function handleSessionCategory(e: any) {
-    console.log("handleSessionCategory event value", e)
-    sessionCategory.value = e.value
 }
 
 function startSession() {
