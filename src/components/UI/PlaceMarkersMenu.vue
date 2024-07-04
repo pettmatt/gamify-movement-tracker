@@ -1,5 +1,5 @@
 <template>
-<p>Place your markers by pressing a placement on the map</p>
+<p>Place your markers by selecting a location on the map</p>
 
 <p v-if="sessionLength.estimated > 0">Estimated length: {{ (sessionLength.estimated).toFixed(2) }} m</p>
 
