@@ -16,7 +16,7 @@ const props = defineProps({
     display: flex;
     flex-direction: column;
     padding: 0.5em 1em;
-    max-width: 700px;
+    max-width: 40em;
     max-height: 100%;
     overflow-y: scroll;
     color: #000;

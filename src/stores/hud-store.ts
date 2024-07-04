@@ -1,4 +1,5 @@
 import { reactive } from "vue"
+import { getItemFromLocalStorage } from "@/services/local-storage-service"
 import type { sessionStoreInterface, sessionDetailsInterface } from "./hud-store-interface"
 
 export const sessionStore = reactive<sessionStoreInterface>({
@@ -47,22 +48,22 @@ export const settingsStore = reactive({
     settings: {
         menus: {
             display: {
-                // fadeTopOnIdle: getItemFromLocalStorage("fadeTopOnIdle"),
-                // fadeRightOnIdle: getItemFromLocalStorage("fadeRightOnIdle"),
-                // fadeBottomOnIdle: getItemFromLocalStorage("fadeBottomOnIdle")
+                fadeTopOnIdle: getItemFromLocalStorage("fadeTopOnIdle"),
+                fadeRightOnIdle: getItemFromLocalStorage("fadeRightOnIdle"),
+                fadeBottomOnIdle: getItemFromLocalStorage("fadeBottomOnIdle")
             },
             functionality: {
-                // enableIdle: getItemFromLocalStorage("fadeBottomOnIdle"),
-                // idconstimer: getItemFromLocalStorage("idconstimer") || 10
+                enableIdle: getItemFromLocalStorage("fadeBottomOnIdle"),
+                idconstimer: getItemFromLocalStorage("idconstimer") || 10
             }
         },
         appFunctionality: {
             general: {
-                // offlineMode: getItemFromLocalStorage("offlineMode"),
+                offlineMode: getItemFromLocalStorage("offlineMode"),
                 units: { name: "metric", unit: "m" } || { name: "imperial", unit: "" }
             },
             services: {
-                // allowThirdPartyServices: getItemFromLocalStorage("allowThirdPartyServices")
+                allowThirdPartyServices: getItemFromLocalStorage("allowThirdPartyServices")
             }
         }
     }
