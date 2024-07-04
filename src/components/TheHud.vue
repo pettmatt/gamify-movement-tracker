@@ -16,6 +16,7 @@
                     <SettingUpSession v-else-if="!sessionStore.placeMarkersStatus" />
                 </div>
             </NotificationBox>
+            <TheSettings v-if="settingsStore.settingsStatus" />
         </div>
         <Transition name="fade-bottom">
             <div class="panel-bottom" v-show="visibilityBottom">
@@ -40,6 +41,7 @@ import { evaluateExpression } from "@/utils/json-utils"
 import menu from "@/structure/hud/bottom-panel.json"
 import ToggleButton from "./UI/ToggleButton.vue"
 import SessionMenu from "./UI/SessionMenu.vue"
+import TheSettings from "./UI/TheSettings.vue"
 import PlaceMarkersMenu from "./UI/PlaceMarkersMenu.vue"
 import SettingUpSession from "./UI/SettingUpSession.vue"
 import NotificationBox from "./UI/NotificationBox.vue"
