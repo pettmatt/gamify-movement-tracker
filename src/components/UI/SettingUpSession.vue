@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { sessionDetails, sessionStore } from "@/stores/hud-store"
-import { ref } from "vue";
+import { ref } from "vue"
 
 const specifySessionLength = ref(false)
 const goalTime = ref(20)
