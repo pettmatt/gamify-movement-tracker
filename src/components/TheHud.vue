@@ -10,11 +10,9 @@
         </Transition>
         <div class="panel-middle">
             <NotificationBox :position="(sessionStore.placeMarkersStatus) ? 'top' : 'default'">
-                <div>
-                    <SessionMenu v-if="sessionStore.sessionStartStatus" />
-                    <PlaceMarkersMenu v-else-if="sessionStore.placeMarkersStatus" />
-                    <SettingUpSession v-else-if="!sessionStore.placeMarkersStatus" />
-                </div>
+                <SessionMenu v-if="sessionStore.sessionStartStatus" />
+                <PlaceMarkersMenu v-else-if="sessionStore.placeMarkersStatus" />
+                <SettingUpSession v-else-if="sessionStore.settingUpSessionStatus" />
             </NotificationBox>
             <TheSettings v-if="settingsStore.settingsStatus" />
         </div>

@@ -25,7 +25,6 @@ const props = defineProps({
 }
 #notification-box {
     pointer-events: all;
-    z-index: 999;
 }
 .default {
     margin: auto;
