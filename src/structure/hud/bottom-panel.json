@@ -6,7 +6,8 @@
             "checked": "ArchiveFill"
         },
         "value": "sessionStore.historyStatus || false",
-        "store": "sessionStore.historyStatus"
+        "store": "sessionStore.historyStatus",
+        "storeUpdate": "sessionStore.historyStatus.value = !sessionStore.historyStatus.value"
     },
     {
         "label": "Session",
@@ -15,7 +16,8 @@
             "checked": "GeoFill"
         },
         "value": "sessionStore.settingUpSessionStatus || false",
-        "store": "sessionStore.settingUpSessionStatus"
+        "store": "sessionStore.settingUpSessionStatus",
+        "storeUpdate": "sessionStore.settingUpSessionStatus.value = !sessionStore.settingUpSessionStatus.value"
     },
     {
         "label": "Settings",
@@ -23,7 +25,8 @@
             "default": "Gear",
             "checked": "GearFill"
         },
-        "value": "sessionStore.settingsStatus || false",
-        "store": "sessionStore.settingsStatus"
+        "value": "settingsStore.settingsStatus || false",
+        "store": "settingsStore.settingsStatus",
+        "storeUpdate": "settingsStore.settingsStatus.value = !settingsStore.settingsStatus.value"
     }
 ]
