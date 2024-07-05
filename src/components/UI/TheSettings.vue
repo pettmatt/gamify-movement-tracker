@@ -28,7 +28,7 @@
         </div>
 
         <div>
-            <h3>App functionality</h3>
+            <h3>Map</h3>
             <ul>
                 General
                 <li>Support offline mode <input type="checkbox" :checked="appSettings.appFunctionality.general.offlineMode" :change="onInputChange" name="offlineMode" /></li>

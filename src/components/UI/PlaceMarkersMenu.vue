@@ -5,11 +5,13 @@
 
 <p v-if="sessionLength.actual > 0">Length of the generated route: {{ (sessionLength.actual).toFixed(2) }} m</p>
 
-<button @click="() => triggerFunction(sessionStore.removeMarkersFunction)" :disabled="checkIfFunctionIsAvailable(sessionStore.removeMarkersFunction)">Remove all markers</button>
-<button @click="() => triggerFunction(sessionStore.createLoopFunction)" :disabled=" checkIfFunctionIsAvailable(sessionStore.createLoopFunction)">Create a loop</button>
-<button @click="() => triggerFunction(sessionStore.createRouteFunction)" :disabled="checkIfFunctionIsAvailable(sessionStore.createRouteFunction)">Generate a route</button>
-<!-- <button @click="() => triggerFunction(removeLastMarker)" :disabled="checkIfFunctionIsAvailable(sessionStore.removeLastMarker)">Undo</button> -->
-<button @click="planSessionRoute">Done</button>
+<div class="button-container">
+    <button @click="() => triggerFunction(sessionStore.removeMarkersFunction)" :disabled="checkIfFunctionIsAvailable(sessionStore.removeMarkersFunction)">Remove all markers</button>
+    <button @click="() => triggerFunction(sessionStore.createLoopFunction)" :disabled=" checkIfFunctionIsAvailable(sessionStore.createLoopFunction)">Create a loop</button>
+    <button @click="() => triggerFunction(sessionStore.createRouteFunction)" :disabled="checkIfFunctionIsAvailable(sessionStore.createRouteFunction)">Generate a route</button>
+    <!-- <button @click="() => triggerFunction(removeLastMarker)" :disabled="checkIfFunctionIsAvailable(sessionStore.removeLastMarker)">Undo</button> -->
+    <button @click="planSessionRoute">Done</button>
+</div>
 </template>
 
 <script lang="ts" setup>
@@ -55,5 +57,12 @@ watch(() => sessionStore.routeLength, (distance: any) => {
 <style scoped>
 p {
     text-align: center;
+}
+.button-container {
+    display: flex;
+    gap: 0.4em;
+}
+.button-container button {
+    font-size: 0.8em;
 }
 </style>

@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, computed, onBeforeUnmount, watch } from "vue"
+import { onMounted, computed, onBeforeUnmount, watch, ref } from "vue"
 import { sessionStore, settingsStore } from "../stores/hud-store"
 import { BIconArchive, BIconArchiveFill, BIconGeo, BIconGeoFill, BIconGear, BIconGearFill } from "bootstrap-icons-vue"
 import ToggleButton from "./UI/ToggleButton.vue"
@@ -54,26 +54,26 @@ import SettingUpSession from "./UI/SettingUpSession.vue"
 import NotificationBox from "./UI/NotificationBox.vue"
 
 let unit = "m"
-let visibilityTop: boolean
-let visibilityBottom: boolean
-let inActivity: any
+const visibilityTop = ref(false)
+const visibilityBottom = ref(true)
+const inActivity = ref()
 
 const panelTopClasses = computed(() => {
     return {
         "fade-in-top": visibilityTop,
-        "fade-out-top": !visibilityTop
+        "fade-out-top": !visibilityTop.value
     }
 })
 
 const fadeInBottom = computed(() => {
     return {
         "fade-in-bottom": visibilityBottom,
-        "fade-out-bottom": !visibilityBottom
+        "fade-out-bottom": !visibilityBottom.value
     }
 })
 
 function addInactivityTimers() {
-    inActivity = setTimeout(() => {
+    inActivity.value = setTimeout(() => {
         // Disable UI elements if screen is inactive.
         // This should NOT override settings.
         hideUIElements()
@@ -98,20 +98,20 @@ function removeInactivityTimers() {
 function resetTimer() {
     showUIElements()
     clearTimeout(inActivity)
-    inActivity = setTimeout(hideUIElements, 10000)
+    inActivity.value = setTimeout(hideUIElements, 10000)
 }
 
 function hideUIElements() {
-    visibilityBottom = false
+    visibilityBottom.value = false
 }
 
 function showUIElements() {
-    visibilityBottom = true
+    visibilityBottom.value = true
 }
 
 onMounted(() => {
-    visibilityTop = false
-    visibilityBottom = true
+    visibilityTop.value = false
+    visibilityBottom.value = true
 
     addInactivityTimers()
 })
