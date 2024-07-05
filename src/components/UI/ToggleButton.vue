@@ -1,12 +1,12 @@
 <template>
-<button :id="`button-${label.toLowerCase()}`" :class="{ highlight: value }" @click="handleClick">
+<button :id="`button-${label.toLowerCase()}`" :class="{ highlight: value }" @click="props.storeUpdateFunction">
     <component :is="currentIcon" class="icon" />
     <small>{{ label }}</small>
 </button>
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed } from "vue"
+import { computed, ref } from "vue"
 
 const props = defineProps({
     label: {
@@ -21,10 +21,6 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    store: {
-        type: Object,
-        default: reactive({ value: false })
-    },
     storeUpdateFunction: {
         type: Function,
         default: (boolean: boolean) => !boolean
@@ -32,10 +28,6 @@ const props = defineProps({
 })
 
 const currentIcon = computed(() => (props.value ? props.icons.checked : props.icons.default))
-
-function handleClick() {
-    props.store.value.update(props.storeUpdateFunction)
-}
 </script>
 
 <style scoped>
@@ -46,5 +38,10 @@ function handleClick() {
 
 button {
     pointer-events: all;
+}
+button svg {
+    position: relative;
+    top: 0.15em;
+    margin-right: 0.35em;
 }
 </style>
