@@ -16,28 +16,30 @@
             </NotificationBox>
             <TheSettings v-if="settingsStore.settingsStatus" />
         </div>
-        <Transition name="fade-bottom">
-            <div class="panel-bottom" v-show="visibilityBottom">
-                <ToggleButton
-                    :label="'History'"
-                    :icons="{ default: BIconArchive, checked: BIconArchiveFill }"
-                    :value="Boolean(sessionStore.historyStatus)"
-                    :storeUpdateFunction="() => sessionStore.historyStatus = !sessionStore.historyStatus"
-                />
-                <ToggleButton
-                    :label="'Session'"
-                    :icons="{ default: BIconGeo, checked: BIconGeoFill }"
-                    :value="Boolean(sessionStore.settingUpSessionStatus)"
-                    :storeUpdateFunction="() => sessionStore.settingUpSessionStatus = !sessionStore.settingUpSessionStatus"
-                />
-                <ToggleButton
-                    :label="'Settings'"
-                    :icons="{ default: BIconGear, checked: BIconGearFill }"
-                    :value="settingsStore.settingsStatus"
-                    :storeUpdateFunction="() => settingsStore.settingsStatus = !settingsStore.settingsStatus"
-                />
-            </div>
-        </Transition>
+        <div class="panel-bottom">
+            <Transition name="fade-bottom">
+                <div class="panel-container" v-show="visibilityBottom">
+                    <ToggleButton
+                        :label="'History'"
+                        :icons="{ default: BIconArchive, checked: BIconArchiveFill }"
+                        :value="Boolean(sessionStore.historyStatus)"
+                        :storeUpdateFunction="() => sessionStore.historyStatus = !sessionStore.historyStatus"
+                    />
+                    <ToggleButton
+                        :label="'Session'"
+                        :icons="{ default: BIconGeo, checked: BIconGeoFill }"
+                        :value="Boolean(sessionStore.settingUpSessionStatus)"
+                        :storeUpdateFunction="() => sessionStore.settingUpSessionStatus = !sessionStore.settingUpSessionStatus"
+                    />
+                    <ToggleButton
+                        :label="'Settings'"
+                        :icons="{ default: BIconGear, checked: BIconGearFill }"
+                        :value="settingsStore.settingsStatus"
+                        :storeUpdateFunction="() => settingsStore.settingsStatus = !settingsStore.settingsStatus"
+                    />
+                </div>
+            </Transition>
+        </div>
     </div>
 </div>
 </template>
@@ -87,7 +89,7 @@ function addInactivityTimers() {
 }
 
 function removeInactivityTimers() {
-    clearTimeout(inActivity)
+    clearTimeout(inActivity.value)
     window.removeEventListener("click", resetTimer)
     window.removeEventListener("keydown", resetTimer)
     window.removeEventListener("mousemove", resetTimer)
@@ -97,7 +99,7 @@ function removeInactivityTimers() {
 
 function resetTimer() {
     showUIElements()
-    clearTimeout(inActivity)
+    clearTimeout(inActivity.value)
     inActivity.value = setTimeout(hideUIElements, 10000)
 }
 
@@ -154,6 +156,7 @@ watch(() => sessionStore.settingUpSessionStatus, (settingUpBoolean: any) => {
 #interface-hud .panel-top,
 #interface-hud .panel-bottom {
     flex: 0 1 auto;
+    height: 3em;
 }
 #interface-hud .panel-top {
     text-align: center;
