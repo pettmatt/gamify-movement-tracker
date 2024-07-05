@@ -18,12 +18,23 @@
         </div>
         <Transition name="fade-bottom">
             <div class="panel-bottom" v-show="visibilityBottom">
-                <ToggleButton v-for="(slot, index) in menu"
-                    :key="index"
-                    :label="slot.label"
-                    :icons="slot.icons"
-                    :value="Boolean(evaluateExpression(slot.value, { sessionStore }))"
-                    :store="evaluateExpression(slot.store, { sessionStore })"
+                <ToggleButton
+                    :label="'History'"
+                    :icons="{ default: BIconArchive, checked: BIconArchiveFill }"
+                    :value="Boolean(sessionStore.historyStatus)"
+                    :storeUpdateFunction="() => sessionStore.historyStatus = !sessionStore.historyStatus"
+                />
+                <ToggleButton
+                    :label="'Session'"
+                    :icons="{ default: BIconGeo, checked: BIconGeoFill }"
+                    :value="Boolean(sessionStore.settingUpSessionStatus)"
+                    :storeUpdateFunction="() => sessionStore.settingUpSessionStatus = !sessionStore.settingUpSessionStatus"
+                />
+                <ToggleButton
+                    :label="'Settings'"
+                    :icons="{ default: BIconGear, checked: BIconGearFill }"
+                    :value="settingsStore.settingsStatus"
+                    :storeUpdateFunction="() => settingsStore.settingsStatus = !settingsStore.settingsStatus"
                 />
             </div>
         </Transition>
@@ -34,9 +45,7 @@
 <script lang="ts" setup>
 import { onMounted, computed, onBeforeUnmount, watch } from "vue"
 import { sessionStore, settingsStore } from "../stores/hud-store"
-import { Trophy, TrophyFill, Archive, ArchiveFill, Geo, GeoFill, Gear, GearFill } from "bootstrap-icons-vue"
-import { evaluateExpression } from "@/utils/json-utils"
-import menu from "@/structure/hud/bottom-panel.json"
+import { BIconArchive, BIconArchiveFill, BIconGeo, BIconGeoFill, BIconGear, BIconGearFill } from "bootstrap-icons-vue"
 import ToggleButton from "./UI/ToggleButton.vue"
 import SessionMenu from "./UI/SessionMenu.vue"
 import TheSettings from "./UI/TheSettings.vue"
@@ -155,7 +164,8 @@ watch(() => sessionStore.settingUpSessionStatus, (settingUpBoolean: any) => {
     flex-direction: row;
     justify-content: center;
     padding: 0.5em 0;
-    gap: 0.3em;
+    gap: 0.5em;
+    text-align: center;
 }
 
 #travel-distance-container {
