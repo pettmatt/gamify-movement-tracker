@@ -11,7 +11,12 @@
 import { sessionStore, sessionDetails } from "@/stores/hud-store"
 import { ref, watch } from "vue"
 
-const distances = ref<object>({
+interface DistanceObject {
+    current: null | undefined | number,
+    goal: null | undefined | number
+}
+
+const distances = ref<DistanceObject>({
     current: null,
     goal: sessionDetails.goal.distance
 })
