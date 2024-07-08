@@ -49,7 +49,7 @@ console.log("Application settings:", appSettings.value)
 
 watch(() => appSettings, () => {
     settingsStore.settings = appSettings.value
-    /* Other components are going to use the store as the source for the settings, so let's use it as well. This can minimize possible issues in the future or at least debugging. */
+    /* Other components are going to use the store as the source for the settings, so let's use it as well. This can minimize possible issues in the future or at least makes debugging easier. */
     synchronizeLocalStorage(settingsStore.settings)
     console.log("Application settings has been changed:", appSettings)
 }, { deep: true })
