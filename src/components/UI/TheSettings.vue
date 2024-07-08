@@ -6,23 +6,18 @@
         <div>
             <h3>Menus</h3>
             <ul>
-                Display
-                <li>
-                    Fade top display bar on idle <input type="checkbox" :checked="Boolean(appSettings.menus.display.fadeTopOnIdle)" @change="onInputChange" name="fadeTopOnIdle" />
-                </li>
-                <li>
-                    Fade bottom menu on idle <input type="checkbox" :checked="Boolean(appSettings.menus.display.fadeBottomOnIdle)" @change="onInputChange" name="fadeBottomOnIdle" />
-                </li>
-            </ul>
-        </div>
-        <div>
-            <ul>
                 Functionality
                 <li>
-                    Enable idle functionality <input type="checkbox" :checked="Boolean(appSettings.menus.functionality.enableIdle)" @change="onInputChange" name="enableIdle" />
+                    Enable idle functionality <input type="checkbox" v-model="appSettings.menus.functionality.enableIdle" name="enableIdle" />
                 </li>
-                <li v-show="appSettings.menus.functionality.enableIdle">
-                    App goes idle after <input type="number" :value="appSettings.menus.functionality.idleTimer" @change="onInputChange" name="idleTimer" min="0" max="999" /> seconds
+                <li>
+                    App goes idle after <input type="number" v-model="appSettings.menus.functionality.idleTimer" :disabled="!appSettings.menus.functionality.enableIdle" name="idleTimer" min="0" max="999" /> seconds
+                </li>
+                <li>
+                    Hide top display bar on idle <input type="checkbox" v-model="appSettings.menus.display.fadeTopOnIdle" :disabled="!appSettings.menus.functionality.enableIdle" name="fadeTopOnIdle" />
+                </li>
+                <li>
+                    Hide bottom menu on idle <input type="checkbox" v-model="appSettings.menus.display.fadeBottomOnIdle" :disabled="!appSettings.menus.functionality.enableIdle" name="fadeBottomOnIdle" />
                 </li>
             </ul>
         </div>
@@ -31,12 +26,12 @@
             <h3>Map</h3>
             <ul>
                 General
-                <li>Support offline mode <input type="checkbox" :checked="Boolean(appSettings.appFunctionality.general.offlineMode)" @change="onInputChange" name="offlineMode" /></li>
+                <li>Support offline mode <input type="checkbox" v-model="appSettings.appFunctionality.general.offlineMode" name="offlineMode" /></li>
             </ul>
             <ul>
                 Services
                 <li>
-                    Allow application to use third-party services <input type="checkbox" :checked="Boolean(appSettings.appFunctionality.services.allowThirdPartyServices)" @change="onInputChange" name="allowThirdPartyServices" />
+                    Allow application to use third-party services <input type="checkbox" v-model="appSettings.appFunctionality.services.allowThirdPartyServices" name="allowThirdPartyServices" />
                 </li>
             </ul>
         </div>
@@ -52,31 +47,27 @@ import { settingsStore } from "@/stores/hud-store"
 const appSettings = ref(settingsStore.settings)
 console.log("Application settings:", appSettings.value)
 
-watch(() => settingsStore.settings, (settingsObject) => {
-    appSettings.value = settingsObject
+watch(() => appSettings, () => {
+    settingsStore.settings = appSettings.value
+    /* Other components are going to use the store as the source for the settings, so let's use it as well. This can minimize possible issues in the future or at least debugging. */
+    synchronizeLocalStorage(settingsStore.settings)
     console.log("Application settings has been changed:", appSettings)
-})
+}, { deep: true })
 
-function onInputChange(event: any) {
-    let inputDetails = {
-        value: null,
-        name: null
+function synchronizeLocalStorage(settings: any) {
+    // console.log("=============================")
+    // console.log("Settings, synchronizeLocalStorage, settings:", settings)
+    for (const property in settings) {
+        const value = settings[property]
+        if (typeof value === "object") {
+            // console.log("Settings, setting property is object", value)
+            synchronizeLocalStorage(value)
+        }
+        else {
+            console.log(`Settings, push to local storage: "${ property }: ${ value }"`)
+            addItemToLocalStorage(property, JSON.stringify(value))
+        }
     }
-
-    if (event.target.type === "checkbox")
-        inputDetails.value = event.target.checked
-
-    else if (event.target.type === "number")
-        inputDetails.value = event.target.value
-
-    else console.warn("Settings, onInputChange, input type", event.target.type)
-
-    inputDetails.name = event.target.name
-    if (inputDetails.name !== null && inputDetails.value !== null) {
-        console.log(`Settings, "${ inputDetails.name }" changed to ${ inputDetails.value }`)
-        addItemToLocalStorage(inputDetails.name, inputDetails.value)
-    }
-    else console.warn("Settings, onInputChange, inputDetails include null value", inputDetails)
 }
 </script>
 
