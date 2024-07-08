@@ -48,22 +48,21 @@ export const settingsStore = reactive({
     settings: {
         menus: {
             display: {
-                fadeTopOnIdle: getItemFromLocalStorage("fadeTopOnIdle"),
-                fadeRightOnIdle: getItemFromLocalStorage("fadeRightOnIdle"),
-                fadeBottomOnIdle: getItemFromLocalStorage("fadeBottomOnIdle")
+                fadeTopOnIdle: getItemFromLocalStorage("fadeTopOnIdle") || true,
+                fadeBottomOnIdle: getItemFromLocalStorage("fadeBottomOnIdle") || true
             },
             functionality: {
-                enableIdle: getItemFromLocalStorage("fadeBottomOnIdle"),
-                idconstimer: getItemFromLocalStorage("idconstimer") || 10
+                enableIdle: getItemFromLocalStorage("fadeBottomOnIdle") || true,
+                idleTimer: getItemFromLocalStorage("idleTimer") || 10
             }
         },
         appFunctionality: {
             general: {
-                offlineMode: getItemFromLocalStorage("offlineMode"),
-                units: { name: "metric", unit: "m" } || { name: "imperial", unit: "" }
+                offlineMode: getItemFromLocalStorage("offlineMode") || false,
+                unit: { name: "metric", unit: "m" } || { name: "imperial", unit: "" }
             },
             services: {
-                allowThirdPartyServices: getItemFromLocalStorage("allowThirdPartyServices")
+                allowThirdPartyServices: getItemFromLocalStorage("allowThirdPartyServices") || false
             }
         }
     }
