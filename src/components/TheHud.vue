@@ -158,9 +158,9 @@ watch(() => settingsStore.settings.appFunctionality.general.unit, (unitChanged: 
     flex: 1 1 auto;
 }
 #interface-hud .panel-top,
-#interface-hud .panel-bottom .panel-container {
+#interface-hud .panel-bottom {
+    height: 5em;
     flex: 0 1 auto;
-    height: 3em;
 }
 #interface-hud .panel-top {
     text-align: center;
