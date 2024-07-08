@@ -4,7 +4,7 @@
         <Transition name="fade-top">
             <div class="panel-top" :class="panelTopClasses" v-show="sessionStore.sessionStartStatus || false">
                 <div id="travel-distance-container">
-                    <b>{{ sessionStore.traveledDistance }} {{ unit }}</b>
+                    <b>{{ sessionStore.traveledDistance }} {{ unit.unit }}</b>
                 </div>
             </div>
         </Transition>
@@ -55,7 +55,7 @@ import PlaceMarkersMenu from "./UI/PlaceMarkersMenu.vue"
 import SettingUpSession from "./UI/SettingUpSession.vue"
 import NotificationBox from "./UI/NotificationBox.vue"
 
-let unit = "m"
+const unit = ref(settingsStore.settings.appFunctionality.general.unit)
 const visibilityTop = ref(false)
 const visibilityBottom = ref(true)
 const inActivity = ref()
@@ -127,6 +127,11 @@ watch(() => sessionStore.settingUpSessionStatus, (settingUpBoolean: any) => {
 
     if (settingUpBoolean)
         enteredSetupMode = true
+})
+
+watch(() => settingsStore.settings.appFunctionality.general.unit, (unitChanged: any) => {
+    console.log("Hud, unit preference changed", unitChanged)
+    unit.value = unitChanged
 })
 </script>
 
