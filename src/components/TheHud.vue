@@ -114,7 +114,6 @@ function showUIElements() {
 onMounted(() => {
     visibilityTop.value = false
     visibilityBottom.value = true
-
     addInactivityTimers()
 })
 onBeforeUnmount(() => {
@@ -154,7 +153,7 @@ watch(() => sessionStore.settingUpSessionStatus, (settingUpBoolean: any) => {
     flex: 1 1 auto;
 }
 #interface-hud .panel-top,
-#interface-hud .panel-bottom {
+#interface-hud .panel-bottom .panel-container {
     flex: 0 1 auto;
     height: 3em;
 }
@@ -162,7 +161,7 @@ watch(() => sessionStore.settingUpSessionStatus, (settingUpBoolean: any) => {
     text-align: center;
     color: #000;
 }
-#interface-hud .panel-bottom {
+#interface-hud .panel-bottom .panel-container {
     display: flex;
     flex-direction: row;
     justify-content: center;

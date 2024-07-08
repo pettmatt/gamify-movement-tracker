@@ -45,7 +45,7 @@ let totalDistances: DistanceProvider = {
 }
 
 function createMap(container: any) {
-    let map = L.map(container).setView([50.08804, 14.42076], 5)
+    map = L.map(container).setView([50.08804, 14.42076], 5)
     L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
         {
@@ -147,7 +147,7 @@ function createMap(container: any) {
 const vMapAction = {
     mounted: (container: HTMLDivElement) => {
         console.log("Creating Leaflet map")
-        map = createMap(container)
+        map.vlue = createMap(container)
     },
     unmounted() {
         console.log("Removing Leaflet map")
@@ -222,7 +222,6 @@ function calculateNewLineLength(coordinates: Array<Array<number>>) {
 function clearTrackingHistory(map: any) {
     map.removeLayer(userTracking.currentLocation)
     map.removeLayer(userTracking.coordinates)
-
     userTracking.currentLocation = []
     userTracking.coordinates = []
 }
@@ -241,7 +240,6 @@ function clearMapMarkersAndPolylines(map: any) {
     }
 
     totalDistances.planned.markerDistances = []
-
     sessionStore.plannedLength = 0
     sessionStore.routeLength = 0
 }
