@@ -8,10 +8,10 @@
             <ul>
                 Display
                 <li>
-                    Fade top display bar on idle <input type="checkbox" :checked="appSettings.menus.display.fadeTopOnIdle" :change="onInputChange" name="fadeTopOnIdle" />
+                    Fade top display bar on idle <input type="checkbox" :checked="Boolean(appSettings.menus.display.fadeTopOnIdle)" @change="onInputChange" name="fadeTopOnIdle" />
                 </li>
                 <li>
-                    Fade bottom menu on idle <input type="checkbox" :checked="appSettings.menus.display.fadeBottomOnIdle" :change="onInputChange" name="fadeBottomOnIdle" />
+                    Fade bottom menu on idle <input type="checkbox" :checked="Boolean(appSettings.menus.display.fadeBottomOnIdle)" @change="onInputChange" name="fadeBottomOnIdle" />
                 </li>
             </ul>
         </div>
@@ -19,10 +19,10 @@
             <ul>
                 Functionality
                 <li>
-                    Enable idle functionality <input type="checkbox" :checked="appSettings.menus.functionality.enableIdle" :change="onInputChange" name="enableIdle" />
+                    Enable idle functionality <input type="checkbox" :checked="Boolean(appSettings.menus.functionality.enableIdle)" @change="onInputChange" name="enableIdle" />
                 </li>
                 <li v-show="appSettings.menus.functionality.enableIdle">
-                    App goes idle after <input type="number" :value="appSettings.menus.functionality.idleTimer" :change="onInputChange" name="idleTimer" /> seconds
+                    App goes idle after <input type="number" :value="appSettings.menus.functionality.idleTimer" @change="onInputChange" name="idleTimer" min="0" max="999" /> seconds
                 </li>
             </ul>
         </div>
@@ -31,12 +31,12 @@
             <h3>Map</h3>
             <ul>
                 General
-                <li>Support offline mode <input type="checkbox" :checked="appSettings.appFunctionality.general.offlineMode" :change="onInputChange" name="offlineMode" /></li>
+                <li>Support offline mode <input type="checkbox" :checked="Boolean(appSettings.appFunctionality.general.offlineMode)" @change="onInputChange" name="offlineMode" /></li>
             </ul>
             <ul>
                 Services
                 <li>
-                    Allow application to use third-party services <input type="checkbox" :checked="appSettings.appFunctionality.services.allowThirdPartyServices" :change="onInputChange" name="allowThirdPartyServices" />
+                    Allow application to use third-party services <input type="checkbox" :checked="Boolean(appSettings.appFunctionality.services.allowThirdPartyServices)" @change="onInputChange" name="allowThirdPartyServices" />
                 </li>
             </ul>
         </div>
@@ -50,7 +50,7 @@ import { addItemToLocalStorage } from "@/services/local-storage-service"
 import { settingsStore } from "@/stores/hud-store"
 
 const appSettings = ref(settingsStore.settings)
-console.log("Application settings:", appSettings)
+console.log("Application settings:", appSettings.value)
 
 watch(() => settingsStore.settings, (settingsObject) => {
     appSettings.value = settingsObject
@@ -72,9 +72,11 @@ function onInputChange(event: any) {
     else console.warn("Settings, onInputChange, input type", event.target.type)
 
     inputDetails.name = event.target.name
-    if (inputDetails.name && inputDetails.value)
+    if (inputDetails.name !== null && inputDetails.value !== null) {
+        console.log(`Settings, "${ inputDetails.name }" changed to ${ inputDetails.value }`)
         addItemToLocalStorage(inputDetails.name, inputDetails.value)
-    else console.warn("Settings, onInputChange, inputDetails include fasely value", inputDetails)
+    }
+    else console.warn("Settings, onInputChange, inputDetails include null value", inputDetails)
 }
 </script>
 
