@@ -147,11 +147,11 @@ function createMap(container: any) {
 const vMapAction = {
     mounted: (container: HTMLDivElement) => {
         console.log("Creating Leaflet map")
-        map.vlue = createMap(container)
+        map = createMap(container)
     },
     unmounted() {
         console.log("Removing Leaflet map")
-        map.remove
+        map.remove()
     }
 }
 
