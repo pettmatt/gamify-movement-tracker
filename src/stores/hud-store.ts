@@ -59,7 +59,7 @@ export const settingsStore = reactive({
         appFunctionality: {
             general: {
                 offlineMode: getItemFromLocalStorage("offlineMode") || false,
-                unit: { name: "metric", unit: "m" } || { name: "imperial", unit: "" }
+                unit: "metric"
             },
             services: {
                 allowThirdPartyServices: getItemFromLocalStorage("allowThirdPartyServices") || false
