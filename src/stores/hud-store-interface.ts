@@ -2,13 +2,13 @@ import type { Waypoints } from "@/interfaces/map-interfaces"
 
 export interface sessionStoreInterface {
     // Booleans
-    settingUpSessionStatus: Boolean,
-    sessionStartStatus: Boolean,
-    placeMarkersStatus: Boolean,
-    highscoresStatus: Boolean,
-    settingsStatus: Boolean,
-    historyStatus: Boolean,
-    // numeric
+    settingUpSessionStatus: boolean,
+    sessionStartStatus: boolean,
+    placeMarkersStatus: boolean,
+    highscoresStatus: boolean,
+    settingsStatus: boolean,
+    historyStatus: boolean,
+    // Numeric
     traveledDistance: number,
     plannedLength: number,
     routeLength: number,
@@ -21,6 +21,11 @@ export interface sessionStoreInterface {
     // User session settings
     // These values are meant to be stored and displayed in History / Highscore menu
     sessionMarkers: undefined | Waypoints,
+}
+
+type sessionStoreInterfaceValues = number | boolean | Function | Waypoints | undefined
+export interface dynamicSessionStoreInterface extends sessionStoreInterface {
+    [key: string]: sessionStoreInterfaceValues
 }
 
 export interface sessionDetailsInterface {

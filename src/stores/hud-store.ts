@@ -1,8 +1,8 @@
 import { reactive } from "vue"
 import { getItemFromLocalStorage } from "@/services/local-storage-service"
-import type { sessionStoreInterface, sessionDetailsInterface } from "./hud-store-interface"
+import type { dynamicSessionStoreInterface, sessionDetailsInterface } from "./hud-store-interface"
 
-export const sessionStore = reactive<sessionStoreInterface>({
+export const sessionStore = reactive<dynamicSessionStoreInterface>({
     // Booleans
     settingUpSessionStatus: false,
     sessionStartStatus: false,

@@ -54,7 +54,7 @@ import TheSettings from "./UI/TheSettings.vue"
 import PlaceMarkersMenu from "./UI/PlaceMarkersMenu.vue"
 import SettingUpSession from "./UI/SettingUpSession.vue"
 import NotificationBox from "./UI/NotificationBox.vue"
-import type { sessionStoreInterface } from "@/stores/hud-store-interface"
+import type { dynamicSessionStoreInterface } from "@/stores/hud-store-interface"
 
 const unit = ref(settingsStore.settings.appFunctionality.general.unit)
 const visibilityTop = ref(false)
@@ -68,7 +68,7 @@ const panelTopClasses = computed(() => {
     }
 })
 
-function resetHudMainButtons(currentButton: keyof sessionStoreInterface) {
+function resetHudMainButtons(currentButton: keyof dynamicSessionStoreInterface) {
     const mainButtonVariables = ["settingsStatus", "historyStatus", "settingUpSessionStatus"]
     mainButtonVariables.forEach(variableName => {
         if (currentButton === variableName)
