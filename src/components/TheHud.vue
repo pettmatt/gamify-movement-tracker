@@ -14,7 +14,7 @@
                 <PlaceMarkersMenu v-else-if="sessionStore.placeMarkersStatus" />
                 <SettingUpSession v-else-if="sessionStore.settingUpSessionStatus" />
             </NotificationBox>
-            <TheSettings v-if="settingsStore.settingsStatus" />
+            <TheSettings v-if="sessionStore.settingsStatus" />
         </div>
         <div class="panel-bottom">
             <Transition name="fade-bottom">
@@ -23,19 +23,19 @@
                         :label="'History'"
                         :icons="{ default: BIconArchive, checked: BIconArchiveFill }"
                         :value="Boolean(sessionStore.historyStatus)"
-                        :storeUpdateFunction="() => sessionStore.historyStatus = !sessionStore.historyStatus"
+                        :storeUpdateFunction="() => resetHudMainButtons('historyStatus')"
                     />
                     <ToggleButton
                         :label="'Session'"
                         :icons="{ default: BIconGeo, checked: BIconGeoFill }"
                         :value="Boolean(sessionStore.settingUpSessionStatus)"
-                        :storeUpdateFunction="() => sessionStore.settingUpSessionStatus = !sessionStore.settingUpSessionStatus"
+                        :storeUpdateFunction="() => resetHudMainButtons('settingUpSessionStatus')"
                     />
                     <ToggleButton
                         :label="'Settings'"
                         :icons="{ default: BIconGear, checked: BIconGearFill }"
-                        :value="settingsStore.settingsStatus"
-                        :storeUpdateFunction="() => settingsStore.settingsStatus = !settingsStore.settingsStatus"
+                        :value="Boolean(sessionStore.settingsStatus)"
+                        :storeUpdateFunction="() => resetHudMainButtons('settingsStatus')"
                     />
                 </div>
             </Transition>
@@ -54,6 +54,7 @@ import TheSettings from "./UI/TheSettings.vue"
 import PlaceMarkersMenu from "./UI/PlaceMarkersMenu.vue"
 import SettingUpSession from "./UI/SettingUpSession.vue"
 import NotificationBox from "./UI/NotificationBox.vue"
+import type { sessionStoreInterface } from "@/stores/hud-store-interface"
 
 const unit = ref(settingsStore.settings.appFunctionality.general.unit)
 const visibilityTop = ref(false)
@@ -66,6 +67,16 @@ const panelTopClasses = computed(() => {
         "fade-out-top": !visibilityTop.value
     }
 })
+
+function resetHudMainButtons(currentButton: keyof sessionStoreInterface) {
+    const mainButtonVariables = ["settingsStatus", "historyStatus", "settingUpSessionStatus"]
+    mainButtonVariables.forEach(variableName => {
+        if (currentButton === variableName)
+            sessionStore[currentButton] = !sessionStore[currentButton]
+        else
+            sessionStore[variableName] = false
+    })
+}
 
 const fadeInBottom = computed(() => {
     return {
