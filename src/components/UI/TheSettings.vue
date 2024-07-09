@@ -66,7 +66,7 @@ function synchronizeLocalStorage(settings: any) {
 
         else {
             console.log(`Settings, push to local storage: "${ property }: ${ value }"`)
-            addItemToLocalStorage(property, JSON.stringify(value))
+            addItemToLocalStorage(property, value)
         }
     }
 }
