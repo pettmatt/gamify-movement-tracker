@@ -4,7 +4,7 @@
         <Transition name="fade-top">
             <div class="panel-top" :class="panelTopClasses" v-show="sessionStore.sessionStartStatus || false">
                 <div id="travel-distance-container">
-                    <b>{{ sessionStore.traveledDistance }} {{ unit.unit }}</b>
+                    <b>{{ sessionStore.traveledDistance }} {{ unit }}</b>
                 </div>
             </div>
         </Transition>
