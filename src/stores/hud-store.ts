@@ -8,6 +8,7 @@ export const sessionStore = reactive<sessionStoreInterface>({
     sessionStartStatus: false,
     placeMarkersStatus: false,
     highscoresStatus: false,
+    settingsStatus: false,
     historyStatus: false,
     // numeric
     traveledDistance: 0,
@@ -44,7 +45,6 @@ export const sessionDetails = reactive<sessionDetailsInterface>({
 })
 
 export const settingsStore = reactive({
-    settingsStatus: false,
     settings: {
         menus: {
             display: {

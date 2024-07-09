@@ -6,6 +6,7 @@ export interface sessionStoreInterface {
     sessionStartStatus: Boolean,
     placeMarkersStatus: Boolean,
     highscoresStatus: Boolean,
+    settingsStatus: Boolean,
     historyStatus: Boolean,
     // numeric
     traveledDistance: number,
