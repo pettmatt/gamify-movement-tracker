@@ -12,7 +12,7 @@ function checkIfFinished(waypointDetails: Waypoints, totalDistances: DistancePro
 
 export function compareLocationWithNextMarker(waypointDetails: Waypoints, totalDistances: DistanceProvider, userTracking: UserTracking) {
     if (waypointDetails.markers.length === 0) {
-        console.log("No markers placed. Skipping next marker detection.")
+        console.log("No markers placed. Skipping next marker comparison.")
         return
     }
 
