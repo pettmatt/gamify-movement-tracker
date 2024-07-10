@@ -10,9 +10,6 @@
     </select>
 </div>
 <div>
-    Plan your route <button @click="planSessionRoute">Plan</button>
-</div>
-<div>
     Specify session length goals <input type="checkbox" name="SpecifySessionLength" v-model="specifySessionLength" />
 </div>
 
@@ -23,6 +20,9 @@
     <div>
         Session distance goal <input type="number" name="GoalDistance" v-model="goalDistance" /> km
     </div>
+    <div>
+        Plan your route <button @click="planSessionRoute">Plan</button>
+    </div>
 </div>
 
 <button @click="startSession">Start the session</button>
@@ -32,10 +32,10 @@
 import { sessionDetails, sessionStore } from "@/stores/hud-store"
 import { ref } from "vue"
 
+const sessionCategory = ref("")
 const specifySessionLength = ref(false)
 const goalTime = ref(20)
 const goalDistance = ref(2.5)
-const sessionCategory = ref("")
 
 function planSessionRoute() {
     sessionStore.placeMarkersStatus = !sessionStore.placeMarkersStatus
@@ -49,5 +49,8 @@ function startSession() {
         sessionDetails.goal.distance = goalDistance.value
         sessionDetails.goal.time = goalTime.value
     }
+
+    sessionStore.sessionStartStatus = true
+    sessionStore.settingUpSessionStatus = false
 }
 </script>
