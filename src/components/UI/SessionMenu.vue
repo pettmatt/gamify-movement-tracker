@@ -1,7 +1,7 @@
 <template>
 <h2>Session menu</h2>
 
-<p>Progress: {{ distances.current }} km</p>
+<p>Progress: {{ distances.current || 0 }} m</p>
 <p v-show="distances.goal">Your goal: </p>
 
 <button @click="endSession">End the session</button>
@@ -17,7 +17,7 @@ interface DistanceObject {
 }
 
 const distances = ref<DistanceObject>({
-    current: null,
+    current: sessionStore.traveledDistance,
     goal: sessionDetails.goal.distance
 })
 
@@ -28,9 +28,9 @@ function endSession() {
     // const sessionStatistics = getMapStatistics()
 }
 
-watch(() => sessionStore.traveledDistance, (currentDistance) => {
-    distances.value.current = currentDistance
-})
+// watch(() => sessionStore.traveledDistance, (currentDistance) => {
+//     distances.value.current = currentDistance
+// })
 </script>
 
 <style>
