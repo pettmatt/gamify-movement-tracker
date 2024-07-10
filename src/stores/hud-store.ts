@@ -1,5 +1,5 @@
 import { reactive } from "vue"
-import { getItemFromLocalStorage } from "@/services/local-storage-service"
+import { convertStringValue, getItemFromLocalStorage, ifNullUseDefaultValue } from "@/services/local-storage-service"
 import type { dynamicSessionStoreInterface, sessionDetailsInterface } from "./hud-store-interface"
 
 export const sessionStore = reactive<dynamicSessionStoreInterface>({
@@ -48,21 +48,21 @@ export const settingsStore = reactive({
     settings: {
         menus: {
             display: {
-                fadeTopOnIdle: getItemFromLocalStorage("fadeTopOnIdle") || true,
-                fadeBottomOnIdle: getItemFromLocalStorage("fadeBottomOnIdle") || true
+                fadeTopOnIdle: ifNullUseDefaultValue(convertStringValue(getItemFromLocalStorage("fadeTopOnIdle")), true),
+                fadeBottomOnIdle: ifNullUseDefaultValue(Boolean(getItemFromLocalStorage("fadeBottomOnIdle")), true)
             },
             functionality: {
-                enableIdle: getItemFromLocalStorage("fadeBottomOnIdle") || true,
-                idleTimer: getItemFromLocalStorage("idleTimer") || 10
+                enableIdle: ifNullUseDefaultValue(convertStringValue(getItemFromLocalStorage("fadeBottomOnIdle")), true),
+                idleTimer: ifNullUseDefaultValue(getItemFromLocalStorage("idleTimer"), 10)
             }
         },
         appFunctionality: {
             general: {
-                offlineMode: getItemFromLocalStorage("offlineMode") || false,
+                offlineMode: ifNullUseDefaultValue(convertStringValue(getItemFromLocalStorage("offlineMode")), false),
                 unit: "metric"
             },
             services: {
-                allowThirdPartyServices: getItemFromLocalStorage("allowThirdPartyServices") || false
+                allowThirdPartyServices: ifNullUseDefaultValue(convertStringValue(getItemFromLocalStorage("allowThirdPartyServices")), false)
             }
         }
     }
