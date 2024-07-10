@@ -11,6 +11,5 @@ export function convertStringValue(value: string | null) {
 }
 
 export function ifNullUseDefaultValue(value: any, defaultValue: any) {
-    console.log("ifNullUseDefaultValue", value, defaultValue, "result", value === null)
     return (value === null || value === undefined) ? defaultValue : value
 }
