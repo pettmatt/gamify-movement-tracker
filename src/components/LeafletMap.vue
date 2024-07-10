@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeMount, onMounted, watch } from "vue"
+import { onBeforeMount, onMounted, ref, watch } from "vue"
 import { sessionStore } from "../stores/hud-store"
 import * as L from "leaflet"
 import "leaflet/dist/leaflet.css"
@@ -17,20 +17,19 @@ import * as LeafletRouting from "../services/leaflet-routing-machine"
 import * as mapUtils from "../utils/map-utils"
 import type { Waypoints, UserTracking, DistanceProvider } from "../interfaces/map-interfaces"
 
-let map: any
-
-let generatedRoute: any = null
-let waypointDetails: Waypoints = {
+const map = ref<any>()
+const generatedRoute = ref<any>(null)
+const waypointDetails = ref<Waypoints>({
     coordinates: [],
     markers: [],
     polyline: null
-}
-let userTracking: UserTracking = {
+})
+const userTracking = ref<UserTracking>({
     currentLocation: [],
     coordinates: [],
     polyline: null
-}
-let totalDistances: DistanceProvider = {
+})
+const totalDistances = ref<DistanceProvider>({
     planned: {
         markerDistances: [],
         getSum: function() {
@@ -42,10 +41,10 @@ let totalDistances: DistanceProvider = {
         markersPassed: [],
         sum: 0
     }
-}
+})
 
 function createMap(container: any) {
-    map = L.map(container).setView([50.08804, 14.42076], 5)
+    map.value = L.map(container).setView([50.08804, 14.42076], 5)
     L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
         {
@@ -53,19 +52,19 @@ function createMap(container: any) {
             subdomains: 'abcd',
             maxZoom: 20,
         }
-    ).addTo(map)
+    ).addTo(map.value)
 
     //  On click, put marker down
     function placeMarker(e: any) {
         const marker = L.marker()
         const coordinates = e.latlng
 
-        waypointDetails.coordinates.push(coordinates) // Used to get the coordinates easily
-        waypointDetails.markers.push(marker) // Used to get easy access to the markers
+        waypointDetails.value.coordinates.push(coordinates) // Used to get the coordinates easily
+        waypointDetails.value.markers.push(marker) // Used to get easy access to the markers
 
-        drawLine(waypointDetails.coordinates, "plan")
-        let markerDistances = totalDistances.planned.markerDistances
-        marker.setLatLng(coordinates, { draggable: true }).addTo(map)
+        drawLine(waypointDetails.value.coordinates, "plan")
+        let markerDistances = totalDistances.value.planned.markerDistances
+        marker.setLatLng(coordinates, { draggable: true }).addTo(map.value)
 
         if (markerDistances.length < 1) {
             marker.bindPopup(`Starting point`)
@@ -81,25 +80,25 @@ function createMap(container: any) {
             }
         }
 
-        map.addLayer(marker)
-        sessionStore.sessionMarkers = waypointDetails
+        map.value.addLayer(marker)
+        sessionStore.sessionMarkers = waypointDetails.value
     }
-    map.on("click", (event: any) => {
+    map.value.on("click", (event: any) => {
         if (sessionStore.placeMarkersStatus) placeMarker(event)
     })
 
     function createLoop(coordinates: Array<Array<number>>) {
         // Makes the route "loopable", bringing the user back to the starting point.
         if (coordinates.length > 2) {
-            waypointDetails.polyline = L.polyline([...coordinates, coordinates[0]]).addTo(map)
+            waypointDetails.value.polyline = L.polyline([...coordinates, coordinates[0]]).addTo(map.value)
             // Pushing the first point again makes sure the routing plugin 
             // displays the route correctly as a loop.
-            waypointDetails.coordinates.push(coordinates[0])
-            calculateNewLineLength(waypointDetails.coordinates)
+            waypointDetails.value.coordinates.push(coordinates[0])
+            calculateNewLineLength(waypointDetails.value.coordinates)
         }
 
     }
-    sessionStore.createLoopFunction = () => createLoop(waypointDetails.coordinates)
+    sessionStore.createLoopFunction = () => createLoop(waypointDetails.value.coordinates)
 
     // Locate user
     let trackingInterval: ReturnType<typeof setInterval | any> = null
@@ -113,9 +112,9 @@ function createMap(container: any) {
             }
 
             console.log("Starting geotracking")
-            map.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true })
-            map.on("locationfound", (e: any) => {
-                userTracking.currentLocation = L.marker()
+            map.value.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true })
+            map.value.on("locationfound", (e: any) => {
+                userTracking.value.currentLocation = L.marker()
                 // Locate and show user's location immediately
                 trackUser(e)
 
@@ -125,7 +124,7 @@ function createMap(container: any) {
                 }, 2000)
             })
 
-            map.on("locationerror", (e: any) => {
+            map.value.on("locationerror", (e: any) => {
                 console.warn(e.message)
                 clearTimeout(trackingInterval)
                 sessionStore.sessionStartStatus = false
@@ -133,30 +132,28 @@ function createMap(container: any) {
         }
 
         else {
-            clearTrackingHistory(map)
-            clearMapMarkersAndPolylines(map)
+            clearTrackingHistory(map.value)
+            clearMapMarkersAndPolylines(map.value)
             clearTimeout(trackingInterval)
             trackingInterval = null
             console.log("Cleaning and stopping geotracking")
         }
     })
-
-    return map
 }
 
 const vMapAction = {
     mounted: (container: HTMLDivElement) => {
         console.log("Creating Leaflet map")
-        map = createMap(container)
+        createMap(container)
     },
     unmounted() {
         console.log("Removing Leaflet map")
-        map.remove()
+        map.value.remove()
     }
 }
 
 function resizeMap() {
-    if (map) map.invalidateSize()
+    if (map.value) map.value.invalidateSize()
 }
 
 // Draw a line from marker to marker
@@ -165,15 +162,15 @@ function drawLine(coordinates: Array<Array<number>>, lineType: string = "plan" |
 
     // Reset polyline, so the previous values won't become a problem
     if (lineType === "plan") {
-        waypointDetails.polyline = L.polyline(coordinates).addTo(map)
-        map.addLayer(waypointDetails.polyline)
+        waypointDetails.value.polyline = L.polyline(coordinates).addTo(map.value)
+        map.value.addLayer(waypointDetails.value.polyline)
         calculateNewLineLength(coordinates)
     }
     else if (lineType === "track") {
         // Possible fix to this is to get rid of if statement and to create polyline every time
         // if (trackingPolyline === null) {
         //     trackingPolyline = L.polyline(coordinates).addTo(map)
-        //     map.addLayer(trackingPolyline)
+        //     map.value.addLayer(trackingPolyline)
         // }
         // else {
         //     // Creates "Uncaught TypeError: latlng is null" error
@@ -181,9 +178,9 @@ function drawLine(coordinates: Array<Array<number>>, lineType: string = "plan" |
         // }
 
         // This will be the fix to the issue pointed above, for now.
-        userTracking.polyline = L.polyline(coordinates).addTo(map)
-        map.addLayer(userTracking.polyline)
-        mapUtils.calculateNewTraveledDistance(map, coordinates, totalDistances.traveled.sum)
+        userTracking.value.polyline = L.polyline(coordinates).addTo(map.value)
+        map.value.addLayer(userTracking.value.polyline)
+        mapUtils.calculateNewTraveledDistance(map.value, coordinates, totalDistances.value.traveled.sum)
     }
 }
 
@@ -196,50 +193,49 @@ function trackUser(e: any) {
 
     const radius = e.accuracy
 
-    // Ignore possible error created by "setLatLng" method. 
     // Typescript error which will be fixed later.
-    userTracking.currentLocation.setLatLng(e.latlng).addTo(map)
-        .bindPopup(`Your location is within ${ radius } meters`)
+    userTracking.value.currentLocation.setLatLng(e.latlng).addTo(map.value)
+        .bindPopup(`Next marker is within ${ radius } meters`)
 
-    userTracking.coordinates.push(userTracking.currentLocation.getLatLng())
-    drawLine(userTracking.coordinates, "track")
+    userTracking.value.coordinates.push(userTracking.value.currentLocation.getLatLng())
+    drawLine(userTracking.value.coordinates, "track")
 
-    const newDistance = mapUtils.compareLocationWithNextMarker(waypointDetails, totalDistances, userTracking)
-    totalDistances.traveled = newDistance
+    const newDistance = mapUtils.compareLocationWithNextMarker(waypointDetails.value, totalDistances.value, userTracking.value)
+    if (newDistance) totalDistances.value.traveled = newDistance
 }
 
 function calculateNewLineLength(coordinates: Array<Array<number>>) {
-    const distance = map.distance(
-        coordinates[totalDistances.planned.markerDistances.length],
+    const distance = map.value.distance(
+        coordinates[totalDistances.value.planned.markerDistances.length],
         coordinates[coordinates.length - 1]
     )
 
-    totalDistances.planned.markerDistances.push(distance)
+    totalDistances.value.planned.markerDistances.push(distance)
     // Update the store values so the HUD can show the planned distance
-    sessionStore.plannedLength = totalDistances.planned.getSum()
+    sessionStore.plannedLength = totalDistances.value.planned.getSum()
 }
 
 function clearTrackingHistory(map: any) {
-    map.removeLayer(userTracking.currentLocation)
-    map.removeLayer(userTracking.coordinates)
-    userTracking.currentLocation = []
-    userTracking.coordinates = []
+    map.removeLayer(userTracking.value.currentLocation)
+    map.removeLayer(userTracking.value.coordinates)
+    userTracking.value.currentLocation = []
+    userTracking.value.coordinates = []
 }
 
 function clearMapMarkersAndPolylines(map: any) {
-    map.eachLayer((layer: any) => {
+    map.value.eachLayer((layer: any) => {
         if (layer instanceof L.Marker || layer instanceof L.Polyline) {
             map.removeLayer(layer)
         }
     })
 
-    waypointDetails = {
+    waypointDetails.value = {
         coordinates: [],
         markers: [],
         polyline: null
     }
 
-    totalDistances.planned.markerDistances = []
+    totalDistances.value.planned.markerDistances = []
     sessionStore.plannedLength = 0
     sessionStore.routeLength = 0
 }
@@ -254,7 +250,7 @@ function hidePlanningMarkers() {
 
 function createLeafletRouting() {
     // At this time I'm unable to calculate the distance of the route which is provided by the routing plugin
-    const route = LeafletRouting.createRoute(L, map, generatedRoute, waypointDetails.coordinates)
+    const route = LeafletRouting.createRoute(L, map.value, generatedRoute.value, waypointDetails.value.coordinates)
     // console.log(route.getRouter())
     // routeLength.set(calculateDistanceOfRoute(route))
 }
@@ -262,7 +258,7 @@ function createLeafletRouting() {
 function checkLayers() {
     let markercount = 0
     let polylineCount = 0
-    map.eachLayer((layer: any) => {
+    map.value.eachLayer((layer: any) => {
         if (layer instanceof L.Marker) {
             markercount++
         } else if (layer instanceof L.Polyline) {
@@ -280,9 +276,9 @@ sessionStore.removeMarkersFunction = () => clearMapMarkersAndPolylines(map)
 sessionStore.createRouteFunction = () => createLeafletRouting()
 
 onMounted(() => {
-    window.addEventListener('leaflet-map-resize', resizeMap);
+    window.addEventListener("leaflet-map-resize", resizeMap)
 })
 onBeforeMount(() => {
-    window.removeEventListener('leaflet-map-resize', resizeMap);
+    window.removeEventListener("leaflet-map-resize", resizeMap)
 })
 </script>
