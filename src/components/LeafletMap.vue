@@ -58,6 +58,7 @@ function createMap(container: any) {
     function placeMarker(e: any) {
         const marker = L.marker()
         const coordinates = e.latlng
+        console.log("Coordinates", coordinates)
 
         waypointDetails.value.coordinates.push(coordinates) // Used to get the coordinates easily
         waypointDetails.value.markers.push(marker) // Used to get easy access to the markers
@@ -132,8 +133,8 @@ function createMap(container: any) {
         }
 
         else {
-            clearTrackingHistory(map.value)
-            clearMapMarkersAndPolylines(map.value)
+            clearTrackingHistory(map)
+            clearMapMarkersAndPolylines(map)
             clearTimeout(trackingInterval)
             trackingInterval = null
             console.log("Cleaning and stopping geotracking")
@@ -169,7 +170,7 @@ function drawLine(coordinates: Array<Array<number>>, lineType: string = "plan" |
     else if (lineType === "track") {
         // Possible fix to this is to get rid of if statement and to create polyline every time
         // if (trackingPolyline === null) {
-        //     trackingPolyline = L.polyline(coordinates).addTo(map)
+        //     trackingPolyline = L.polyline(coordinates).addTo(map.value)
         //     map.value.addLayer(trackingPolyline)
         // }
         // else {
@@ -216,8 +217,8 @@ function calculateNewLineLength(coordinates: Array<Array<number>>) {
 }
 
 function clearTrackingHistory(map: any) {
-    map.removeLayer(userTracking.value.currentLocation)
-    map.removeLayer(userTracking.value.coordinates)
+    map.value.removeLayer(userTracking.value.currentLocation)
+    map.value.removeLayer(userTracking.value.coordinates)
     userTracking.value.currentLocation = []
     userTracking.value.coordinates = []
 }
@@ -225,7 +226,7 @@ function clearTrackingHistory(map: any) {
 function clearMapMarkersAndPolylines(map: any) {
     map.value.eachLayer((layer: any) => {
         if (layer instanceof L.Marker || layer instanceof L.Polyline) {
-            map.removeLayer(layer)
+            map.value.removeLayer(layer)
         }
     })
 
