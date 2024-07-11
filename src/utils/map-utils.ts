@@ -13,10 +13,13 @@ function checkIfFinished(waypointDetails: Waypoints, totalDistances: DistancePro
 }
 
 function endSession() {
+    // Show visually that the session has ended
+    // Save session results
     const previousSessionsString = getItemFromLocalStorage("history") || "[]"
     const previousSessions = JSON.parse(previousSessionsString)
     previousSessions.push(sessionDetails)
     addItemToLocalStorage("history", previousSessions)
+    // Reset the map or move to overview stage
 }
 
 export function compareLocationWithNextMarker(waypointDetails: Waypoints, totalDistances: DistanceProvider, userTracking: UserTracking) {
