@@ -1,13 +1,22 @@
 // File includes functionalities that are custom made for the map.
 // More standard functionalities are still included in the Map component.
 // import { traveledDistance } from "../stores/hud-store"
+import { addItemToLocalStorage, getItemFromLocalStorage } from "@/services/local-storage-service"
 import type { Waypoints, UserTracking, DistanceProvider } from "../interfaces/map-interfaces"
+import { sessionDetails } from "@/stores/hud-store"
 
 function checkIfFinished(waypointDetails: Waypoints, totalDistances: DistanceProvider) {
     if (waypointDetails.markers.length === totalDistances.traveled.markersPassed.length) {
         console.log(`You have finished your planned session.`)
-        console.log(`Do you want to continue to free roaming?`)
+        console.log(`Moving to next lap, if no action is taken.`)
     }
+}
+
+function endSession() {
+    const previousSessionsString = getItemFromLocalStorage("history") || "[]"
+    const previousSessions = JSON.parse(previousSessionsString)
+    previousSessions.push(sessionDetails)
+    addItemToLocalStorage("history", previousSessions)
 }
 
 export function compareLocationWithNextMarker(waypointDetails: Waypoints, totalDistances: DistanceProvider, userTracking: UserTracking) {
@@ -28,7 +37,7 @@ export function compareLocationWithNextMarker(waypointDetails: Waypoints, totalD
 
     let distanceToNextMarker = locationCoordinates.distanceTo(nextMarker)
     distanceToNextMarker = (distanceToNextMarker / 1000).toFixed(2)
-    
+
     console.log(`Next marker is ${ distanceToNextMarker } ${ "km" } away`)
 
     if (distanceToNextMarker < 0.05) {
