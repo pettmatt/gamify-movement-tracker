@@ -32,8 +32,8 @@ const currentIcon = computed(() => (props.value ? props.icons.checked : props.ic
 
 <style scoped>
 .highlight {
-    border: solid 2px;
-    border-color: #646cff;
+    border: solid var(--main-border-width);
+    border-color: var(--primary-color);
 }
 
 button {

@@ -15,7 +15,30 @@
   overflow: hidden;
 }
 
-/* color palette from <https://github.com/vuejs/theme> */
+/* Fonts */
+:root {
+  --h1-size: 3.2em;
+}
+
+/* Spacing variables */
+:root {
+  --main-padding: 0.75em;
+}
+
+/* Color scheme */
+:root {
+  /* --main-background: ; */
+  --primary-color: #646cff;
+  --darker-primary-color: #535bf2;
+  --button-background: linear-gradient(135deg, #4682eb -20%, #01beff 120%);
+}
+
+/* Other */
+:root {
+  --main-border-radius: 0.5em;
+  --main-border-width: 0.25em;
+}
+
 /* :root {
   --vt-c-white: #ffffff;
   --vt-c-white-soft: #f8f8f8;
