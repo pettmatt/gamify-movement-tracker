@@ -5,7 +5,6 @@ export interface sessionStoreInterface {
     settingUpSessionStatus: boolean,
     sessionStartStatus: boolean,
     placeMarkersStatus: boolean,
-    highscoresStatus: boolean,
     settingsStatus: boolean,
     historyStatus: boolean,
     // Numeric

@@ -7,7 +7,6 @@ export const sessionStore = reactive<dynamicSessionStoreInterface>({
     settingUpSessionStatus: false,
     sessionStartStatus: false,
     placeMarkersStatus: false,
-    highscoresStatus: false,
     settingsStatus: false,
     historyStatus: false,
     // numeric
