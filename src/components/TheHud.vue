@@ -9,25 +9,25 @@
             </div>
         </Transition>
         <div class="panel-middle">
-            <NotificationBox v-show="((sessionStore.sessionStartStatus && sessionStore.settingUpSessionStatus) || sessionStore.placeMarkersStatus || sessionStore.settingUpSessionStatus)" :position="(sessionStore.placeMarkersStatus) ? 'top' : 'default'">
-                <SessionMenu v-if="sessionStore.sessionStartStatus" />
+            <NotificationBox v-show="showNotification" :position="definePosition">
+                <TheSettings v-if="sessionStore.settingsStatus" />
+                <SessionMenu v-else-if="sessionStore.sessionStartStatus" />
                 <PlaceMarkersMenu v-else-if="sessionStore.placeMarkersStatus" />
                 <SettingUpSession v-else-if="sessionStore.settingUpSessionStatus" />
             </NotificationBox>
-            <TheSettings v-if="sessionStore.settingsStatus" />
         </div>
         <div class="panel-bottom">
             <Transition name="fade-bottom">
                 <div class="panel-container" v-show="visibilityBottom" :class="fadeBottom">
                     <ToggleButton
                         :label="'History'"
-                        :icons="{ default: BIconArchive, checked: BIconArchiveFill }"
+                        :icons="{ default: BIconClockHistory, checked: BIconClockFill }"
                         :value="Boolean(sessionStore.historyStatus)"
                         :storeUpdateFunction="() => resetHudMainButtons('historyStatus')"
                     />
                     <ToggleButton
                         :label="'Session'"
-                        :icons="{ default: BIconGeo, checked: BIconGeoFill }"
+                        :icons="{ default: BIconDiamond, checked: BIconDiamondFill }"
                         :value="Boolean(sessionStore.settingUpSessionStatus)"
                         :storeUpdateFunction="() => resetHudMainButtons('settingUpSessionStatus')"
                     />
@@ -47,7 +47,7 @@
 <script lang="ts" setup>
 import { onMounted, computed, onBeforeUnmount, watch, ref } from "vue"
 import { sessionStore, settingsStore } from "../stores/hud-store"
-import { BIconArchive, BIconArchiveFill, BIconGeo, BIconGeoFill, BIconGear, BIconGearFill } from "bootstrap-icons-vue"
+import { BIconClockHistory, BIconClockFill, BIconDiamond, BIconDiamondFill, BIconGear, BIconGearFill } from "bootstrap-icons-vue"
 import ToggleButton from "./UI/ToggleButton.vue"
 import SessionMenu from "./UI/SessionMenu.vue"
 import TheSettings from "./UI/TheSettings.vue"
@@ -66,6 +66,27 @@ const fadeTop = computed(() => {
         "fade-in-top": visibilityTop,
         "fade-out-top": !visibilityTop.value
     }
+})
+
+const definePosition = computed(() => {
+    let position = null
+    if (sessionStore.placeMarkersStatus) {
+        position = "top"
+    }
+    else {
+        if (sessionStore.sessionStartStatus) {
+            position = "bottom"
+        }
+        else {
+            position = "default"
+        }
+    }
+
+    return position
+})
+
+const showNotification = computed(() => {
+    return (sessionStore.sessionStartStatus && sessionStore.settingUpSessionStatus) || sessionStore.settingUpSessionStatus || sessionStore.placeMarkersStatus || sessionStore.settingsStatus
 })
 
 function resetHudMainButtons(currentButton: keyof dynamicSessionStoreInterface) {
@@ -171,7 +192,8 @@ watch(() => settingsStore.settings.appFunctionality.general.unit, (unitChanged: 
 }
 #interface-hud .panel-top,
 #interface-hud .panel-bottom {
-    height: 5em;
+    min-height: 3.5em;
+    max-height: 3.5em;
     flex: 0 1 auto;
 }
 #interface-hud .panel-top {
@@ -182,7 +204,10 @@ watch(() => settingsStore.settings.appFunctionality.general.unit, (unitChanged: 
     display: flex;
     flex-direction: row;
     justify-content: center;
-    padding: 0.5em 0;
+    margin-bottom: var(--main-padding);
+    margin-left: var(--main-padding);
+    margin-right: var(--main-padding);
+    padding-bottom: 0.5em;
     gap: 0.5em;
     text-align: center;
 }
