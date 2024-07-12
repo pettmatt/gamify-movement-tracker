@@ -2,7 +2,7 @@
 <div id="interface-hud">
     <div class="interface-container">
         <Transition name="fade-top">
-            <div class="panel-top" :class="panelTopClasses" v-show="sessionStore.sessionStartStatus || false">
+            <div class="panel-top" :class="fadeTop" v-show="sessionStore.sessionStartStatus || false">
                 <div id="travel-distance-container">
                     <b>{{ sessionStore.traveledDistance }} {{ unit }}</b>
                 </div>
@@ -18,7 +18,7 @@
         </div>
         <div class="panel-bottom">
             <Transition name="fade-bottom">
-                <div class="panel-container" v-show="visibilityBottom">
+                <div class="panel-container" v-show="visibilityBottom" :class="fadeBottom">
                     <ToggleButton
                         :label="'History'"
                         :icons="{ default: BIconArchive, checked: BIconArchiveFill }"
@@ -61,7 +61,7 @@ const visibilityTop = ref(false)
 const visibilityBottom = ref(true)
 const inActivity = ref()
 
-const panelTopClasses = computed(() => {
+const fadeTop = computed(() => {
     return {
         "fade-in-top": visibilityTop,
         "fade-out-top": !visibilityTop.value
@@ -78,7 +78,7 @@ function resetHudMainButtons(currentButton: keyof dynamicSessionStoreInterface) 
     })
 }
 
-const fadeInBottom = computed(() => {
+const fadeBottom = computed(() => {
     return {
         "fade-in-bottom": visibilityBottom,
         "fade-out-bottom": !visibilityBottom.value
@@ -115,7 +115,8 @@ function resetTimer() {
 }
 
 function hideUIElements() {
-    visibilityBottom.value = false
+    if (!sessionStore.placeMarkersStatus && !sessionStore.settingsStatus && !sessionStore.historyStatus && !sessionStore.settingUpSessionStatus)
+        visibilityBottom.value = false
 }
 
 function showUIElements() {
