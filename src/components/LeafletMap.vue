@@ -58,7 +58,6 @@ function createMap(container: any) {
     function placeMarker(e: any) {
         const marker = L.marker()
         const coordinates = e.latlng
-        console.log("Coordinates", coordinates)
 
         waypointDetails.value.coordinates.push(coordinates) // Used to get the coordinates easily
         waypointDetails.value.markers.push(marker) // Used to get easy access to the markers
