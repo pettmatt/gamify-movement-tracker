@@ -11,12 +11,14 @@
             </Transition>
         </div>
         <div class="panel-middle">
-            <NotificationBox v-show="showNotification" :position="definePosition">
-                <TheSettings v-if="sessionStore.settingsStatus" />
-                <SessionMenu v-else-if="sessionStore.sessionStartStatus" />
-                <PlaceMarkersMenu v-else-if="sessionStore.placeMarkersStatus" />
-                <SettingUpSession v-else-if="sessionStore.settingUpSessionStatus" />
-            </NotificationBox>
+            <Transition name="fade-middle">
+                <NotificationBox v-show="showNotification" :position="definePosition">
+                    <TheSettings v-if="settingsStatus" />
+                    <SessionMenu v-else-if="sessionStartStatus" />
+                    <PlaceMarkersMenu v-else-if="placeMarkersStatus" />
+                    <SettingUpSession v-else-if="settingUpSessionStatus" />
+                </NotificationBox>
+            </Transition>
         </div>
         <div class="panel-bottom">
             <Transition name="fade-bottom">
@@ -62,6 +64,10 @@ const unit = ref(settingsStore.settings.appFunctionality.general.unit)
 const visibilityTop = ref<boolean>(false)
 const visibilityBottom = ref<boolean>(true)
 const inactivity = ref<number>()
+const settingsStatus = ref<boolean>(sessionStore.settingsStatus)
+const sessionStartStatus = ref<boolean>(sessionStore.sessionStartStatus)
+const placeMarkersStatus = ref<boolean>(sessionStore.placeMarkersStatus)
+const settingUpSessionStatus = ref<boolean>(sessionStore.settingUpSessionStatus)
 
 const definePosition = computed(() => {
     let position = null
@@ -86,9 +92,10 @@ const showNotification = computed(() => {
 
 function resetHudMainButtons(currentButton: keyof dynamicSessionStoreInterface) {
     const mainButtonVariables = ["settingsStatus", "historyStatus", "settingUpSessionStatus"]
+
     mainButtonVariables.forEach(variableName => {
         if (currentButton === variableName)
-            sessionStore[currentButton] = !sessionStore[currentButton]
+        sessionStore[currentButton] = !sessionStore[currentButton]
         else
             sessionStore[variableName] = false
     })
@@ -154,6 +161,28 @@ watch(() => settingsStore.settings.appFunctionality.general.unit, (unitChanged: 
     console.log("Hud, unit preference changed", unitChanged)
     unit.value = unitChanged
 })
+
+function delayedAction(customFunction: Function, value: boolean) {
+    const menuStatuses = [settingsStatus.value, placeMarkersStatus.value, settingUpSessionStatus.value]
+    const activeMenus = menuStatuses.filter(boolean => boolean === true)
+    if (!value && activeMenus.length < 1)
+        setTimeout(customFunction, 400) // The time delay should be updated if the animation length is changed
+    else
+        customFunction()
+}
+
+watch(() => sessionStore.settingsStatus, (newValue) => {
+    delayedAction(() => settingsStatus.value = newValue, newValue)
+})
+watch(() => sessionStore.sessionStartStatus, (newValue) => {
+    delayedAction(() => sessionStartStatus.value = newValue, newValue)
+})
+watch(() => sessionStore.placeMarkersStatus, (newValue) => {
+    delayedAction(() => placeMarkersStatus.value = newValue, newValue)
+})
+watch(() => sessionStore.settingUpSessionStatus, (newValue) => {
+    delayedAction(() => settingUpSessionStatus.value = newValue, newValue)
+})
 </script>
 
 <style scoped>
@@ -208,8 +237,10 @@ watch(() => settingsStore.settings.appFunctionality.general.unit, (unitChanged: 
 }
 
 /* Animations */
+/* Note: Check "delayedAction" function if animation length is changed from 400ms */
 .fade-top-enter-active, .fade-top-leave-active,
-.fade-bottom-enter-active, .fade-bottom-leave-active {
+.fade-bottom-enter-active, .fade-bottom-leave-active,
+.fade-middle-enter-active, .fade-middle-leave-active {
     transition:
         opacity 0.3s ease-in-out,
         transform 0.4s ease-in-out;
@@ -232,6 +263,16 @@ watch(() => settingsStore.settings.appFunctionality.general.unit, (unitChanged: 
 }
 .fade-bottom-enter-to,
 .fade-bottom-leave-from {
+    opacity: 1;
+    transform: translateY(0%);
+}
+.fade-middle-enter-from,
+.fade-middle-leave-to {
+    opacity: 0;
+    transform: translateY(10%);
+}
+.fade-middle-enter-to,
+.fade-middle-leave-from {
     opacity: 1;
     transform: translateY(0%);
 }
