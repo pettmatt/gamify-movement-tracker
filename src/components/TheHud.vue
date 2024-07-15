@@ -3,7 +3,7 @@
     <div class="interface-container">
         <div class="panel-top">
             <Transition name="fade-top">
-                <div class="panel-container" :class="fadeTop" v-show="sessionStore.sessionStartStatus || false">
+                <div class="panel-container" v-show="sessionStore.sessionStartStatus || false">
                     <div id="travel-distance-container">
                         <b>{{ sessionStore.traveledDistance }} {{ unit }}</b>
                     </div>
@@ -62,20 +62,6 @@ const unit = ref(settingsStore.settings.appFunctionality.general.unit)
 const visibilityTop = ref<boolean>(false)
 const visibilityBottom = ref<boolean>(true)
 const inactivity = ref<number>()
-
-const fadeTop = computed(() => {
-    return {
-        "fade-in-top": visibilityTop,
-        "fade-out-top": !visibilityTop.value
-    }
-})
-
-const fadeBottom = computed(() => {
-    return {
-        "fade-in-bottom": visibilityBottom,
-        "fade-out-bottom": !visibilityBottom.value
-    }
-})
 
 const definePosition = computed(() => {
     let position = null
@@ -226,7 +212,7 @@ watch(() => settingsStore.settings.appFunctionality.general.unit, (unitChanged: 
 .fade-bottom-enter-active, .fade-bottom-leave-active {
     transition:
         opacity 0.3s ease-in-out,
-        transform 0.5s ease-in-out;
+        transform 0.4s ease-in-out;
 }
 .fade-top-enter-from,
 .fade-top-leave-to {
