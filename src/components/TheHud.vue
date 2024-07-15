@@ -1,13 +1,15 @@
 <template>
 <div id="interface-hud">
     <div class="interface-container">
-        <Transition name="fade-top">
-            <div class="panel-top" :class="fadeTop" v-show="sessionStore.sessionStartStatus || false">
-                <div id="travel-distance-container">
-                    <b>{{ sessionStore.traveledDistance }} {{ unit }}</b>
+        <div class="panel-top">
+            <Transition name="fade-top">
+                <div class="panel-container" :class="fadeTop" v-show="sessionStore.sessionStartStatus || false">
+                    <div id="travel-distance-container">
+                        <b>{{ sessionStore.traveledDistance }} {{ unit }}</b>
+                    </div>
                 </div>
-            </div>
-        </Transition>
+            </Transition>
+        </div>
         <div class="panel-middle">
             <NotificationBox v-show="showNotification" :position="definePosition">
                 <TheSettings v-if="sessionStore.settingsStatus" />
@@ -18,7 +20,7 @@
         </div>
         <div class="panel-bottom">
             <Transition name="fade-bottom">
-                <div class="panel-container" v-show="visibilityBottom" :class="fadeBottom">
+                <div class="panel-container" v-show="visibilityBottom">
                     <ToggleButton
                         :label="'History'"
                         :icons="{ default: BIconClockHistory, checked: BIconClockFill }"
@@ -45,9 +47,9 @@
 </template>
 
 <script lang="ts" setup>
+import { BIconClockHistory, BIconClockFill, BIconDiamond, BIconDiamondFill, BIconGear, BIconGearFill } from "bootstrap-icons-vue"
 import { onMounted, computed, onBeforeUnmount, watch, ref } from "vue"
 import { sessionStore, settingsStore } from "../stores/hud-store"
-import { BIconClockHistory, BIconClockFill, BIconDiamond, BIconDiamondFill, BIconGear, BIconGearFill } from "bootstrap-icons-vue"
 import ToggleButton from "./UI/ToggleButton.vue"
 import SessionMenu from "./UI/SessionMenu.vue"
 import TheSettings from "./UI/TheSettings.vue"
@@ -57,14 +59,21 @@ import NotificationBox from "./UI/NotificationBox.vue"
 import type { dynamicSessionStoreInterface } from "@/stores/hud-store-interface"
 
 const unit = ref(settingsStore.settings.appFunctionality.general.unit)
-const visibilityTop = ref(false)
-const visibilityBottom = ref(true)
-const inActivity = ref()
+const visibilityTop = ref<boolean>(false)
+const visibilityBottom = ref<boolean>(true)
+const inactivity = ref<number>()
 
 const fadeTop = computed(() => {
     return {
         "fade-in-top": visibilityTop,
         "fade-out-top": !visibilityTop.value
+    }
+})
+
+const fadeBottom = computed(() => {
+    return {
+        "fade-in-bottom": visibilityBottom,
+        "fade-out-bottom": !visibilityBottom.value
     }
 })
 
@@ -99,15 +108,8 @@ function resetHudMainButtons(currentButton: keyof dynamicSessionStoreInterface) 
     })
 }
 
-const fadeBottom = computed(() => {
-    return {
-        "fade-in-bottom": visibilityBottom,
-        "fade-out-bottom": !visibilityBottom.value
-    }
-})
-
 function addInactivityTimers() {
-    inActivity.value = setTimeout(() => {
+    inactivity.value = setTimeout(() => {
         // Disable UI elements if screen is inactive.
         // This should NOT override settings.
         hideUIElements()
@@ -121,7 +123,7 @@ function addInactivityTimers() {
 }
 
 function removeInactivityTimers() {
-    clearTimeout(inActivity.value)
+    clearTimeout(inactivity.value)
     window.removeEventListener("click", resetTimer)
     window.removeEventListener("keydown", resetTimer)
     window.removeEventListener("mousemove", resetTimer)
@@ -131,8 +133,8 @@ function removeInactivityTimers() {
 
 function resetTimer() {
     showUIElements()
-    clearTimeout(inActivity.value)
-    inActivity.value = setTimeout(hideUIElements, 10000)
+    clearTimeout(inactivity.value)
+    inactivity.value = setTimeout(hideUIElements, 10000)
 }
 
 function hideUIElements() {
@@ -192,11 +194,10 @@ watch(() => settingsStore.settings.appFunctionality.general.unit, (unitChanged: 
 }
 #interface-hud .panel-top,
 #interface-hud .panel-bottom {
-    min-height: 3.5em;
-    max-height: 3.5em;
+    height: 3.5em;
     flex: 0 1 auto;
 }
-#interface-hud .panel-top {
+#interface-hud .panel-top .panel-container {
     text-align: center;
     color: #000;
 }
@@ -221,36 +222,31 @@ watch(() => settingsStore.settings.appFunctionality.general.unit, (unitChanged: 
 }
 
 /* Animations */
-.fade-top-leave-from,
-.fade-top-leave-to {
-    opacity: 0;
-    transform: translateY(0%);
+.fade-top-enter-active, .fade-top-leave-active,
+.fade-bottom-enter-active, .fade-bottom-leave-active {
     transition:
         opacity 0.3s ease-in-out,
         transform 0.5s ease-in-out;
 }
-.fade-top-enter-active,
-.fade-top-leave-active {
+.fade-top-enter-from,
+.fade-top-leave-to {
+    opacity: 0;
+    transform: translateY(0%);
+}
+.fade-top-enter-to,
+.fade-top-leave-from {
     opacity: 1;
     transform: translateY(10%);
-    transition:
-        opacity 0.3s ease-in-out,
-        transform 0.5s ease-in-out;
 }
 .fade-bottom-enter-from,
 .fade-bottom-leave-to {
     opacity: 0;
     transform: translateY(50%);
-    transition:
-        opacity 0.3s ease-in-out,
-        transform 0.5s ease-in-out;
+    
 }
-.fade-bottom-enter-active,
-.fade-bottom-leave-active {
+.fade-bottom-enter-to,
+.fade-bottom-leave-from {
     opacity: 1;
     transform: translateY(0%);
-    transition:
-        opacity 0.3s ease-in-out,
-        transform 0.5s ease-in-out;
 }
 </style>
