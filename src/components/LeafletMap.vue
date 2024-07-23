@@ -78,10 +78,10 @@ function createMap(container: any) {
         } else {
             const distance = markerDistances[markerDistances.length - 1]
             if (distance > 1000) {
-                marker.bindPopup(`Distance from the previous marker is ${ (distance / 1000).toFixed(2) } kilometers`)
+                marker.bindPopup(`${ (distance / 1000).toFixed(2) } kilometers`)
             }
             else {
-                marker.bindPopup(`Distance from the previous marker is ${ (distance).toFixed(2) } meters`)
+                marker.bindPopup(`${ (distance).toFixed(2) } meters`)
             }
         }
 
