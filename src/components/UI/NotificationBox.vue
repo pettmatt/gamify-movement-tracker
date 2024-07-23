@@ -55,6 +55,7 @@ const props = defineProps({
     #notification-box {
         margin-right: 1em;
         margin-left: 1em;
+        width: 100%;
     }
 }
 </style>
