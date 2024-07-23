@@ -16,8 +16,6 @@ export function ifNullUseDefaultValue(value: any, defaultValue: any) {
     return (value === null || value === undefined) ? defaultValue : value
 }
 
-export interface History {
-    id: string,
-    date: Date,
-    details: SessionDetailsInterface
+export interface History extends SessionDetailsInterface {
+    date: number
 }
