@@ -19,5 +19,5 @@ export function ifNullUseDefaultValue(value: any, defaultValue: any) {
 export interface History {
     id: string,
     date: Date,
-    session: SessionDetailsInterface
+    details: SessionDetailsInterface
 }
