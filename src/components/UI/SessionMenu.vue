@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { addItemToLocalStorage, getItemFromLocalStorage, ifNullUseDefaultValue, type History } from "@/services/local-storage-service"
+import { addItemToLocalStorage, convertStringValue, getItemFromLocalStorage, type History } from "@/services/local-storage-service"
 import { currentTime } from "@/services/time-service"
 import { hudStore, sessionDetails } from "@/stores/hud-store"
 import { ref } from "vue"
@@ -34,15 +34,11 @@ function endSession() {
     hudStore.sessionStartStatus = false
     sessionDetails.session.endingTime = currentTime()
     const sessionStatistics: History = getStatistics()
-    const history: History[] | [] = JSON.parse(ifNullUseDefaultValue(getItemFromLocalStorage("history"), "[]"))
+    const historyString = getItemFromLocalStorage("history")
+    const history: History[] | [] = convertStringValue(historyString)
     history.unshift(sessionStatistics)
-
     addItemToLocalStorage("history", JSON.stringify(history))
 }
-
-// watch(() => sessionDetails.session.traveledDistance, (currentDistance) => {
-//     distances.value.current = currentDistance
-// })
 </script>
 
 <style>
