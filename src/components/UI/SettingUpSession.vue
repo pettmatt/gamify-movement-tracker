@@ -29,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+import { currentTime } from "@/services/time-service"
 import { sessionDetails, hudStore } from "@/stores/hud-store"
 import { ref } from "vue"
 
@@ -42,6 +43,7 @@ function planSessionRoute() {
 }
 
 function startSession() {
+    sessionDetails.session.startingTime = currentTime()
     sessionDetails.category = sessionCategory.value
     sessionDetails.goal.lengthSpecified = specifySessionLength.value
 
