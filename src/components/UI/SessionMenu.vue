@@ -21,8 +21,6 @@ const distances = ref<DistanceObject>({
     goal: sessionDetails.goal.distance
 })
 
-function createPrompt() {}
-
 function endSession() {
     sessionStore.sessionStartStatus = false
     // const sessionStatistics = getMapStatistics()
