@@ -103,8 +103,8 @@ function resetHudMainButtons(currentButton: keyof dynamicSessionStoreInterface) 
 
 function addInactivityTimers() {
     inactivity.value = setTimeout(() => {
-        // Disable UI elements if screen is inactive.
-        // This should NOT override settings.
+        /* Disable UI elements if screen is inactive.
+        This should NOT override settings. */
         hideUIElements()
     }, 10000)
 
@@ -148,18 +148,9 @@ onBeforeUnmount(() => {
     removeInactivityTimers()
 })
 
-watch(() => sessionStore.settingUpSessionStatus, (settingUpBoolean: any) => {
-    /* Used to setting up the session and hand 
-    over the control of the setup phase */
-    let enteredSetupMode = false
-
-    if (settingUpBoolean)
-        enteredSetupMode = true
-})
-
-watch(() => settingsStore.settings.appFunctionality.general.unit, (unitChanged: any) => {
-    console.log("Hud, unit preference changed", unitChanged)
-    unit.value = unitChanged
+watch(() => settingsStore.settings.appFunctionality.general.unit, (newUnit: string) => {
+    console.log("Hud, unit preference changed", newUnit)
+    unit.value = newUnit
 })
 
 function delayedMenuAction(customFunction: Function, value: boolean) {
