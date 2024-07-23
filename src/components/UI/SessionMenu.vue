@@ -26,7 +26,7 @@ const distances = ref<DistanceObject>({
 function getStatistics(): History {
     return {
         date: currentTime(),
-        details: sessionDetails
+        ...sessionDetails
     }
 }
 
@@ -34,8 +34,8 @@ function endSession() {
     hudStore.sessionStartStatus = false
     sessionDetails.session.endingTime = currentTime()
     const sessionStatistics: History = getStatistics()
-    const historyString = getItemFromLocalStorage("history")
-    const history: History[] | [] = convertStringValue(historyString)
+    const historyString = getItemFromLocalStorage("history") 
+    const history: History[] | [] = convertStringValue(historyString || "[]")
     history.unshift(sessionStatistics)
     addItemToLocalStorage("history", JSON.stringify(history))
 }
