@@ -162,7 +162,7 @@ watch(() => settingsStore.settings.appFunctionality.general.unit, (unitChanged: 
     unit.value = unitChanged
 })
 
-function delayedAction(customFunction: Function, value: boolean) {
+function delayedMenuAction(customFunction: Function, value: boolean) {
     const menuStatuses = [settingsStatus.value, placeMarkersStatus.value, settingUpSessionStatus.value]
     const activeMenus = menuStatuses.filter(boolean => boolean === true)
     if (!value && activeMenus.length < 1)
@@ -172,16 +172,16 @@ function delayedAction(customFunction: Function, value: boolean) {
 }
 
 watch(() => sessionStore.settingsStatus, (newValue) => {
-    delayedAction(() => settingsStatus.value = newValue, newValue)
+    delayedMenuAction(() => settingsStatus.value = newValue, newValue)
 })
 watch(() => sessionStore.sessionStartStatus, (newValue) => {
-    delayedAction(() => sessionStartStatus.value = newValue, newValue)
+    delayedMenuAction(() => sessionStartStatus.value = newValue, newValue)
 })
 watch(() => sessionStore.placeMarkersStatus, (newValue) => {
-    delayedAction(() => placeMarkersStatus.value = newValue, newValue)
+    delayedMenuAction(() => placeMarkersStatus.value = newValue, newValue)
 })
 watch(() => sessionStore.settingUpSessionStatus, (newValue) => {
-    delayedAction(() => settingUpSessionStatus.value = newValue, newValue)
+    delayedMenuAction(() => settingUpSessionStatus.value = newValue, newValue)
 })
 </script>
 
