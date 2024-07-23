@@ -6,16 +6,16 @@
 <p v-if="sessionLength.actual > 0">Length of the generated route: {{ (sessionLength.actual).toFixed(2) }} m</p>
 
 <div class="button-container">
-    <button @click="() => triggerFunction(sessionStore.removeMarkersFunction)" :disabled="checkIfFunctionIsAvailable(sessionStore.removeMarkersFunction)">Remove all markers</button>
-    <button @click="() => triggerFunction(sessionStore.createLoopFunction)" :disabled=" checkIfFunctionIsAvailable(sessionStore.createLoopFunction)">Create a loop</button>
-    <button @click="() => triggerFunction(sessionStore.createRouteFunction)" :disabled="checkIfFunctionIsAvailable(sessionStore.createRouteFunction)">Generate a route</button>
-    <!-- <button @click="() => triggerFunction(removeLastMarker)" :disabled="checkIfFunctionIsAvailable(sessionStore.removeLastMarker)">Undo</button> -->
+    <button @click="() => triggerFunction(hudStore.removeMarkersFunction)" :disabled="checkIfFunctionIsAvailable(hudStore.removeMarkersFunction)">Remove all markers</button>
+    <button @click="() => triggerFunction(hudStore.createLoopFunction)" :disabled=" checkIfFunctionIsAvailable(hudStore.createLoopFunction)">Create a loop</button>
+    <button @click="() => triggerFunction(hudStore.createRouteFunction)" :disabled="checkIfFunctionIsAvailable(hudStore.createRouteFunction)">Generate a route</button>
+    <!-- <button @click="() => triggerFunction(removeLastMarker)" :disabled="checkIfFunctionIsAvailable(hudStore.removeLastMarker)">Undo</button> -->
     <button @click="planSessionRoute">Done</button>
 </div>
 </template>
 
 <script lang="ts" setup>
-import { sessionStore, sessionDetails } from "@/stores/hud-store"
+import { hudStore, sessionDetails } from "@/stores/hud-store"
 import { ref, watch } from "vue"
 
 const sessionLength = ref({
@@ -25,14 +25,14 @@ const sessionLength = ref({
 
 function planSessionRoute() {
     sessionDetails.goal = {
-        markers: sessionStore.sessionMarkers,
+        markers: sessionDetails.session.sessionMarkers,
         estimatedDistance: sessionLength.value.estimated,
         lengthSpecified: sessionDetails.goal.lengthSpecified,
         distance: sessionDetails.goal.distance,
         time: sessionDetails.goal.distance
     }
 
-    sessionStore.placeMarkersStatus = !sessionStore.placeMarkersStatus
+    hudStore.placeMarkersStatus = !hudStore.placeMarkersStatus
     console.log("Plan session route", sessionDetails)
 }
 
@@ -46,10 +46,10 @@ const checkIfFunctionIsAvailable = (func: Function | undefined) => {
     return typeof func === "function" ? false : true
 }
 
-watch(() => sessionStore.plannedLength, (distance: any) => {
+watch(() => hudStore.plannedLength, (distance: any) => {
     sessionLength.value.estimated = distance
 })
-watch(() => sessionStore.routeLength, (distance: any) => {
+watch(() => sessionDetails.goal.routeLength, (distance: any) => {
     sessionLength.value.estimated = distance
 })
 </script>

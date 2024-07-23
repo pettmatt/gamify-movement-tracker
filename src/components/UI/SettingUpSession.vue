@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { sessionDetails, sessionStore } from "@/stores/hud-store"
+import { sessionDetails, hudStore } from "@/stores/hud-store"
 import { ref } from "vue"
 
 const sessionCategory = ref("")
@@ -38,7 +38,7 @@ const goalTime = ref(20)
 const goalDistance = ref(2.5)
 
 function planSessionRoute() {
-    sessionStore.placeMarkersStatus = !sessionStore.placeMarkersStatus
+    hudStore.placeMarkersStatus = !hudStore.placeMarkersStatus
 }
 
 function startSession() {
@@ -50,7 +50,7 @@ function startSession() {
         sessionDetails.goal.time = goalTime.value
     }
 
-    sessionStore.sessionStartStatus = true
-    sessionStore.settingUpSessionStatus = false
+    hudStore.sessionStartStatus = true
+    hudStore.settingUpSessionStatus = false
 }
 </script>

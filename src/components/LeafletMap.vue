@@ -10,7 +10,8 @@
 
 <script lang="ts" setup>
 import { onBeforeMount, onMounted, ref, watch } from "vue"
-import { sessionStore } from "../stores/hud-store"
+import { hudStore, sessionDetails } from "../stores/hud-store"
+import { BIconConeStriped } from "bootstrap-icons-vue"
 import * as L from "leaflet"
 import "leaflet/dist/leaflet.css"
 import * as LeafletRouting from "../services/leaflet-routing-machine"
@@ -56,6 +57,12 @@ function createMap(container: any) {
 
     //  On click, put marker down
     function placeMarker(e: any) {
+        const icon = L.icon({
+            iconUrl: "data:image/svg+xml;base64," + BIconConeStriped,
+            iconSize: [24, 24],
+            iconAnchor: [12, 24],
+            popupAnchor: [0, -24]
+        })
         const marker = L.marker()
         const coordinates = e.latlng
 
@@ -64,27 +71,25 @@ function createMap(container: any) {
 
         drawLine(waypointDetails.value.coordinates, "plan")
         let markerDistances = totalDistances.value.planned.markerDistances
-        marker.setLatLng(coordinates, { draggable: true }).addTo(map.value)
+        marker.setLatLng(coordinates, { draggable: true, icon: icon }).addTo(map.value)
 
         if (markerDistances.length < 1) {
             marker.bindPopup(`Starting point`)
         } else {
             const distance = markerDistances[markerDistances.length - 1]
             if (distance > 1000) {
-                marker.bindPopup(`Distance from the previous marker is 
-                ${ (distance / 1000).toFixed(2) } kilometers`)
+                marker.bindPopup(`Distance from the previous marker is ${ (distance / 1000).toFixed(2) } kilometers`)
             }
             else {
-                marker.bindPopup(`Distance from the previous marker is 
-                ${ (distance).toFixed(2) } meters`)
+                marker.bindPopup(`Distance from the previous marker is ${ (distance).toFixed(2) } meters`)
             }
         }
 
         map.value.addLayer(marker)
-        sessionStore.sessionMarkers = waypointDetails.value
+        sessionDetails.session.sessionMarkers = waypointDetails.value
     }
     map.value.on("click", (event: any) => {
-        if (sessionStore.placeMarkersStatus) placeMarker(event)
+        if (hudStore.placeMarkersStatus) placeMarker(event)
     })
 
     function createLoop(coordinates: Array<Array<number>>) {
@@ -98,12 +103,12 @@ function createMap(container: any) {
         }
 
     }
-    sessionStore.createLoopFunction = () => createLoop(waypointDetails.value.coordinates)
+    hudStore.createLoopFunction = () => createLoop(waypointDetails.value.coordinates)
 
     // Locate user
     let trackingInterval: ReturnType<typeof setInterval | any> = null
 
-    watch(() => sessionStore.sessionStartStatus, (sessionStarted) => {
+    watch(() => hudStore.sessionStartStatus, (sessionStarted) => {
         // Check if user has activated tracking through clicking on an element.
         if (sessionStarted) {
             if (!navigator.permissions) {
@@ -127,7 +132,7 @@ function createMap(container: any) {
             map.value.on("locationerror", (e: any) => {
                 console.warn(e.message)
                 clearTimeout(trackingInterval)
-                sessionStore.sessionStartStatus = false
+                hudStore.sessionStartStatus = false // TODO: Do not toggle session start status, prompt user that the application cannot get device's location.
             })
         }
 
@@ -212,7 +217,7 @@ function calculateNewLineLength(coordinates: Array<Array<number>>) {
 
     totalDistances.value.planned.markerDistances.push(distance)
     // Update the store values so the HUD can show the planned distance
-    sessionStore.plannedLength = totalDistances.value.planned.getSum()
+    sessionDetails.goal.plannedLength = totalDistances.value.planned.getSum()
 }
 
 function clearTrackingHistory(map: any) {
@@ -236,8 +241,8 @@ function clearMapMarkersAndPolylines(map: any) {
     }
 
     totalDistances.value.planned.markerDistances = []
-    sessionStore.plannedLength = 0
-    sessionStore.routeLength = 0
+    sessionDetails.goal.plannedLength = 0
+    sessionDetails.goal.routeLength = 0
 }
 
 function showPlanningMarkers() {
@@ -272,8 +277,8 @@ function checkLayers() {
 
 // Pass functions that need map parameters to hud-store.
 // When necessary the function is passed else where in this file.
-sessionStore.removeMarkersFunction = () => clearMapMarkersAndPolylines(map)
-sessionStore.createRouteFunction = () => createLeafletRouting()
+hudStore.removeMarkersFunction = () => clearMapMarkersAndPolylines(map)
+hudStore.createRouteFunction = () => createLeafletRouting()
 
 onMounted(() => {
     window.addEventListener("leaflet-map-resize", resizeMap)

@@ -3,9 +3,9 @@
     <div class="interface-container">
         <div class="panel-top">
             <Transition name="fade-top">
-                <div class="panel-container" v-show="sessionStore.sessionStartStatus || false">
+                <div class="panel-container" v-show="hudStore.sessionStartStatus || false">
                     <div id="travel-distance-container">
-                        <b>{{ sessionStore.traveledDistance }} {{ unit }}</b>
+                        <b>{{ sessionDetails.session.traveledDistance }} {{ unit }}</b>
                     </div>
                 </div>
             </Transition>
@@ -17,6 +17,7 @@
                     <SessionMenu v-else-if="sessionStartStatus" />
                     <PlaceMarkersMenu v-else-if="placeMarkersStatus" />
                     <SettingUpSession v-else-if="settingUpSessionStatus" />
+                    <SessionHistory v-else-if="historyStatus" />
                 </NotificationBox>
             </Transition>
         </div>
@@ -26,19 +27,19 @@
                     <ToggleButton
                         :label="'History'"
                         :icons="{ default: BIconClockHistory, checked: BIconClockFill }"
-                        :value="Boolean(sessionStore.historyStatus)"
+                        :value="Boolean(hudStore.historyStatus)"
                         :storeUpdateFunction="() => resetHudMainButtons('historyStatus')"
                     />
                     <ToggleButton
                         :label="'Session'"
                         :icons="{ default: BIconDiamond, checked: BIconDiamondFill }"
-                        :value="Boolean(sessionStore.settingUpSessionStatus)"
+                        :value="Boolean(hudStore.settingUpSessionStatus)"
                         :storeUpdateFunction="() => resetHudMainButtons('settingUpSessionStatus')"
                     />
                     <ToggleButton
                         :label="'Settings'"
                         :icons="{ default: BIconGear, checked: BIconGearFill }"
-                        :value="Boolean(sessionStore.settingsStatus)"
+                        :value="Boolean(hudStore.settingsStatus)"
                         :storeUpdateFunction="() => resetHudMainButtons('settingsStatus')"
                     />
                 </div>
@@ -51,31 +52,33 @@
 <script lang="ts" setup>
 import { BIconClockHistory, BIconClockFill, BIconDiamond, BIconDiamondFill, BIconGear, BIconGearFill } from "bootstrap-icons-vue"
 import { onMounted, computed, onBeforeUnmount, watch, ref } from "vue"
-import { sessionStore, settingsStore } from "../stores/hud-store"
-import ToggleButton from "./UI/ToggleButton.vue"
+import { hudStore, sessionDetails, settingsStore } from "../stores/hud-store"
+import ToggleButton from "./UI/generic/ToggleButton.vue"
 import SessionMenu from "./UI/SessionMenu.vue"
 import TheSettings from "./UI/TheSettings.vue"
 import PlaceMarkersMenu from "./UI/PlaceMarkersMenu.vue"
 import SettingUpSession from "./UI/SettingUpSession.vue"
 import NotificationBox from "./UI/NotificationBox.vue"
-import type { dynamicSessionStoreInterface } from "@/stores/hud-store-interface"
+import type { DynamicHudStoreInterface } from "@/stores/hud-store-interface"
+import SessionHistory from "./UI/SessionHistory.vue"
 
 const unit = ref(settingsStore.settings.appFunctionality.general.unit)
 const visibilityTop = ref<boolean>(false)
 const visibilityBottom = ref<boolean>(true)
 const inactivity = ref<number>()
-const settingsStatus = ref<boolean>(sessionStore.settingsStatus)
-const sessionStartStatus = ref<boolean>(sessionStore.sessionStartStatus)
-const placeMarkersStatus = ref<boolean>(sessionStore.placeMarkersStatus)
-const settingUpSessionStatus = ref<boolean>(sessionStore.settingUpSessionStatus)
+const settingsStatus = ref<boolean>(hudStore.settingsStatus)
+const sessionStartStatus = ref<boolean>(hudStore.sessionStartStatus)
+const placeMarkersStatus = ref<boolean>(hudStore.placeMarkersStatus)
+const settingUpSessionStatus = ref<boolean>(hudStore.settingUpSessionStatus)
+const historyStatus = ref<boolean>(hudStore.historyStatus)
 
 const definePosition = computed(() => {
     let position = null
-    if (sessionStore.placeMarkersStatus) {
+    if (hudStore.placeMarkersStatus) {
         position = "top"
     }
     else {
-        if (sessionStore.sessionStartStatus) {
+        if (hudStore.sessionStartStatus) {
             position = "bottom"
         }
         else {
@@ -87,17 +90,17 @@ const definePosition = computed(() => {
 })
 
 const showNotification = computed(() => {
-    return (sessionStore.sessionStartStatus && sessionStore.settingUpSessionStatus) || sessionStore.settingUpSessionStatus || sessionStore.placeMarkersStatus || sessionStore.settingsStatus
+    return (hudStore.sessionStartStatus && hudStore.settingUpSessionStatus) || hudStore.settingUpSessionStatus || hudStore.placeMarkersStatus || hudStore.settingsStatus || hudStore.historyStatus
 })
 
-function resetHudMainButtons(currentButton: keyof dynamicSessionStoreInterface) {
+function resetHudMainButtons(currentButton: keyof DynamicHudStoreInterface) {
     const mainButtonVariables = ["settingsStatus", "historyStatus", "settingUpSessionStatus"]
 
     mainButtonVariables.forEach(variableName => {
         if (currentButton === variableName)
-        sessionStore[currentButton] = !sessionStore[currentButton]
+            hudStore[currentButton] = !hudStore[currentButton]
         else
-            sessionStore[variableName] = false
+            hudStore[variableName] = false
     })
 }
 
@@ -131,7 +134,7 @@ function resetTimer() {
 }
 
 function hideUIElements() {
-    if (!sessionStore.placeMarkersStatus && !sessionStore.settingsStatus && !sessionStore.historyStatus && !sessionStore.settingUpSessionStatus)
+    if (!hudStore.placeMarkersStatus && !hudStore.settingsStatus && !hudStore.historyStatus && !hudStore.settingUpSessionStatus && !hudStore.historyStatus)
         visibilityBottom.value = false
 }
 
@@ -162,17 +165,20 @@ function delayedMenuAction(customFunction: Function, value: boolean) {
         customFunction()
 }
 
-watch(() => sessionStore.settingsStatus, (newValue) => {
+watch(() => hudStore.settingsStatus, (newValue) => {
     delayedMenuAction(() => settingsStatus.value = newValue, newValue)
 })
-watch(() => sessionStore.sessionStartStatus, (newValue) => {
+watch(() => hudStore.sessionStartStatus, (newValue) => {
     delayedMenuAction(() => sessionStartStatus.value = newValue, newValue)
 })
-watch(() => sessionStore.placeMarkersStatus, (newValue) => {
+watch(() => hudStore.placeMarkersStatus, (newValue) => {
     delayedMenuAction(() => placeMarkersStatus.value = newValue, newValue)
 })
-watch(() => sessionStore.settingUpSessionStatus, (newValue) => {
+watch(() => hudStore.settingUpSessionStatus, (newValue) => {
     delayedMenuAction(() => settingUpSessionStatus.value = newValue, newValue)
+})
+watch(() => hudStore.historyStatus, (newValue) => {
+    delayedMenuAction(() => historyStatus.value = newValue, newValue)
 })
 </script>
 

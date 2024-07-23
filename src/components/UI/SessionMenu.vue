@@ -2,14 +2,16 @@
 <h2>Session menu</h2>
 
 <p>Progress: {{ distances.current || 0 }} m</p>
-<p v-show="distances.goal">Your goal: </p>
+<p v-show="distances.goal">Your goal: {{ distances.goal }} km</p>
 
 <button @click="endSession">End the session</button>
 </template>
 
 <script setup lang="ts">
-import { sessionStore, sessionDetails } from "@/stores/hud-store"
-import { ref, watch } from "vue"
+import { addItemToLocalStorage, getItemFromLocalStorage, ifNullUseDefaultValue, type History } from "@/services/local-storage-service"
+import { currentTime } from "@/services/time-service"
+import { hudStore, sessionDetails } from "@/stores/hud-store"
+import { ref } from "vue"
 
 interface DistanceObject {
     current: null | undefined | number,
@@ -17,16 +19,28 @@ interface DistanceObject {
 }
 
 const distances = ref<DistanceObject>({
-    current: sessionStore.traveledDistance,
+    current: sessionDetails.session.traveledDistance,
     goal: sessionDetails.goal.distance
 })
 
-function endSession() {
-    sessionStore.sessionStartStatus = false
-    // const sessionStatistics = getMapStatistics()
+function getStatistics(): History {
+    return {
+        date: currentTime(),
+        details: sessionDetails
+    }
 }
 
-// watch(() => sessionStore.traveledDistance, (currentDistance) => {
+function endSession() {
+    hudStore.sessionStartStatus = false
+    sessionDetails.session.endingTime = currentTime()
+    const sessionStatistics: History = getStatistics()
+    const history: History[] | [] = JSON.parse(ifNullUseDefaultValue(getItemFromLocalStorage("history"), "[]"))
+    history.unshift(sessionStatistics)
+
+    addItemToLocalStorage("history", JSON.stringify(history))
+}
+
+// watch(() => sessionDetails.session.traveledDistance, (currentDistance) => {
 //     distances.value.current = currentDistance
 // })
 </script>

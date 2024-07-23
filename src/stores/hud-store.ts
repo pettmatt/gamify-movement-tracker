@@ -1,8 +1,8 @@
 import { reactive } from "vue"
 import { convertStringValue, getItemFromLocalStorage, ifNullUseDefaultValue } from "@/services/local-storage-service"
-import type { dynamicSessionStoreInterface, sessionDetailsInterface } from "./hud-store-interface"
+import type { DynamicHudStoreInterface, SessionDetailsInterface } from "./hud-store-interface"
 
-export const sessionStore = reactive<dynamicSessionStoreInterface>({
+export const hudStore = reactive<DynamicHudStoreInterface>({
     // Booleans
     settingUpSessionStatus: false,
     sessionStartStatus: false,
@@ -17,7 +17,7 @@ export const sessionStore = reactive<dynamicSessionStoreInterface>({
     getMapStatistics: undefined
 })
 
-export const sessionDetails = reactive<sessionDetailsInterface>({
+export const sessionDetails = reactive<SessionDetailsInterface>({
     category: undefined,
     goal: {
         markers: undefined,
@@ -37,7 +37,6 @@ export const sessionDetails = reactive<sessionDetailsInterface>({
         distance: undefined,
         startingTime: undefined,
         endingTime: undefined,
-        // These values are meant to be stored and displayed in History / Highscore menu
     }
 })
 
