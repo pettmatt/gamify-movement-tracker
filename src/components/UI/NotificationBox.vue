@@ -15,12 +15,13 @@ const props = defineProps({
     border-radius: 0.5em;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     padding: 0.5em 1em;
     max-width: 40em;
     max-height: 80vh;
     overflow-y: scroll;
-    color: #000;
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.8), rgba(144, 144, 144, 0.4));
+    color: #ddd;
+    background: var(--main-background-color-light);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 #notification-box {
@@ -40,7 +41,9 @@ const props = defineProps({
 .top {
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important;
-    margin: 0 auto auto auto;
+    margin: 0 1em;
+    position: fixed;
+    top: 0;
 }
 .bottom {
     margin: auto;

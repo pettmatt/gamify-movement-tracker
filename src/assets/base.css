@@ -31,6 +31,7 @@
   --primary-color: #646cff;
   --darker-primary-color: #535bf2;
   --main-background-color: #1a1a1a;
+  --main-background-color-light: #303030;
   --button-background: linear-gradient(135deg, #4682eb -20%, #01beff 120%);
 }
 
