@@ -1,6 +1,6 @@
 <template>
 <ul>
-    {{ props.historyStatistics ? "Statistics" : "No statistics to show" }}    
+    {{ props.history ? "Statistics" : "No statistics to show" }}
 </ul>
 </template>
 
@@ -9,3 +9,9 @@ const props = defineProps({
     history: Array<History>
 })
 </script>
+
+<style scoped>
+ul {
+    padding-left: 0;
+}
+</style>
