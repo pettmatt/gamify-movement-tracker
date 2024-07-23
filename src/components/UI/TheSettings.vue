@@ -72,4 +72,11 @@ function synchronizeLocalStorage(settings: any) {
 </script>
 
 <style scoped>
+#settings-box ul {
+    font-weight: bold;
+}
+#settings-box li {
+    font-weight: normal;
+    margin-left: 1.5em;
+}
 </style>
