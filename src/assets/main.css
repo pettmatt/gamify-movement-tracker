@@ -18,7 +18,10 @@ body {
   height: 100vh;
 }
 
-h1, h2 {
+h1, h2, h3, h4 {
+  margin-top: 0;
+}
+h1, h2, h3 {
   margin-top: 0.2em;
   margin-bottom: 0.2em;
 }
@@ -28,6 +31,12 @@ h1 {
 }
 h2 {
   font-size: 1.3em;
+}
+
+ul {
+  padding-left: 1em;
+  margin: 0;
+  margin-bottom: 0.5em;
 }
 
 main {
@@ -70,5 +79,11 @@ button:focus-visible {
 .flex-horizontal {
   display: flex;
   flex-direction: row;
+  gap: 0.5em;
+}
+
+.flex-vertical {
+  display: flex;
+  flex-direction: column;
   gap: 0.5em;
 }
