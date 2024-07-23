@@ -66,3 +66,9 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+
+.flex-horizontal {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+}
