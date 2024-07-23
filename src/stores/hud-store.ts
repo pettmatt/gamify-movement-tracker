@@ -19,14 +19,15 @@ export const hudStore = reactive<DynamicHudStoreInterface>({
 
 export const sessionDetails = reactive<SessionDetailsInterface>({
     category: undefined,
+    specifySessionLength: false,
     goal: {
         markers: undefined,
         estimatedDistance: undefined,
         lengthSpecified: false,
         plannedLength: 0,
         routeLength: 0,
-        distance: undefined,
-        time: undefined,
+        distance: 2.5,
+        time: 20,
     },
     session: {
         traveledDistance: 0,

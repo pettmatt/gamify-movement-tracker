@@ -22,6 +22,7 @@ export interface DynamicHudStoreInterface extends HudStoreInterface {
 
 export interface SessionDetailsInterface {
     category: undefined | string,
+    specifySessionLength: boolean,
     goal: {
         markers: undefined | number[][],
         estimatedDistance: undefined | number,
