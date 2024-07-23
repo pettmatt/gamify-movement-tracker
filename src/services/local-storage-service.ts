@@ -1,3 +1,5 @@
+import type { SessionDetailsInterface } from "@/stores/hud-store-interface"
+
 export function addItemToLocalStorage(key: string, value: string) {
     localStorage.setItem(key, value)
 }
@@ -12,4 +14,10 @@ export function convertStringValue(value: string | null) {
 
 export function ifNullUseDefaultValue(value: any, defaultValue: any) {
     return (value === null || value === undefined) ? defaultValue : value
+}
+
+export interface History {
+    id: string,
+    date: Date,
+    session: SessionDetailsInterface
 }

@@ -9,19 +9,12 @@ export const sessionStore = reactive<dynamicSessionStoreInterface>({
     placeMarkersStatus: false,
     settingsStatus: false,
     historyStatus: false,
-    // numeric
-    traveledDistance: 0,
-    plannedLength: 0,
-    routeLength: 0,
     // Functions
     removeMarkersFunction: undefined,
     createRouteFunction: undefined,
     createLoopFunction: undefined,
     removeLastMarker: undefined,
-    getMapStatistics: undefined,
-    // User session settings
-    // These values are meant to be stored and displayed in History / Highscore menu
-    sessionMarkers: undefined
+    getMapStatistics: undefined
 })
 
 export const sessionDetails = reactive<sessionDetailsInterface>({
@@ -30,16 +23,21 @@ export const sessionDetails = reactive<sessionDetailsInterface>({
         markers: undefined,
         estimatedDistance: undefined,
         lengthSpecified: false,
+        plannedLength: 0,
+        routeLength: 0,
         distance: undefined,
         time: undefined,
     },
     session: {
+        traveledDistance: 0,
         routeCoordinates: undefined,
         markerCount: undefined,
+        sessionMarkers: undefined,
         passedThroughMarkers: undefined,
         distance: undefined,
         startingTime: undefined,
-        endTimer: undefined
+        endingTime: undefined,
+        // These values are meant to be stored and displayed in History / Highscore menu
     }
 })
 
