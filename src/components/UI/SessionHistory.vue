@@ -6,11 +6,7 @@
 </div>
 
 <div class="previous-sessions" v-show="historyStatistics">
-    <ul class="flex-vertical">
-        <li v-for="(item, index) in historyStatistics" :key="index">
-            <HistoryListItem :item="item" />
-        </li>
-    </ul>
+    <HistoryList :list="historyStatistics" />
 </div>
 </template>
 
@@ -18,7 +14,7 @@
 import { convertStringValue, getItemFromLocalStorage, type History } from "@/services/local-storage-service"
 import { onMounted, ref } from "vue"
 import HistorySummary from "./history/HistorySummary.vue"
-import HistoryListItem from "./history/HistoryListItem.vue"
+import HistoryList from "./history/HistoryList.vue"
 
 const historyStatistics = ref<History[] | null>()
 
