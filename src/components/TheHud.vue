@@ -53,13 +53,13 @@
 import { BIconClockHistory, BIconClockFill, BIconDiamond, BIconDiamondFill, BIconGear, BIconGearFill } from "bootstrap-icons-vue"
 import { onMounted, computed, onBeforeUnmount, watch, ref } from "vue"
 import { hudStore, sessionDetails, settingsStore } from "../stores/hud-store"
+import type { DynamicHudStoreInterface } from "@/stores/hud-store-interface"
 import ToggleButton from "./UI/generic/ToggleButton.vue"
 import SessionMenu from "./UI/SessionMenu.vue"
 import TheSettings from "./UI/TheSettings.vue"
 import PlaceMarkersMenu from "./UI/PlaceMarkersMenu.vue"
 import SettingUpSession from "./UI/SettingUpSession.vue"
 import NotificationBox from "./UI/NotificationBox.vue"
-import type { DynamicHudStoreInterface } from "@/stores/hud-store-interface"
 import SessionHistory from "./UI/SessionHistory.vue"
 
 const unit = ref(settingsStore.settings.appFunctionality.general.unit)
