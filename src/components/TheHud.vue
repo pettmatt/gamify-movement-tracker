@@ -3,7 +3,7 @@
     <div class="interface-container">
         <div class="panel-top">
             <Transition name="fade-top">
-                <div class="panel-container" v-show="hudStore.sessionStartStatus || false">
+                <div class="panel-container" v-show="visibilityTop">
                     <div id="travel-distance-container">
                         <b>{{ sessionDetails.session.traveledDistance }} {{ unit }}</b>
                     </div>
@@ -98,7 +98,6 @@ const showLabel = computed(() => {
 })
 
 const showNotification = computed(() => {
-    console.log((hudStore.sessionStartStatus && hudStore.settingUpSessionStatus), (hudStore.placeMarkersStatus && hudStore.settingUpSessionStatus), hudStore.settingUpSessionStatus, hudStore.settingsStatus, hudStore.historyStatus)
     return (hudStore.sessionStartStatus && hudStore.settingUpSessionStatus) || (hudStore.placeMarkersStatus && hudStore.settingUpSessionStatus) || hudStore.settingUpSessionStatus || hudStore.settingsStatus || hudStore.historyStatus
 })
 
