@@ -245,13 +245,9 @@ function clearMapMarkersAndPolylines(map: any) {
     sessionDetails.goal.routeLength = 0
 }
 
-function showPlanningMarkers() {
+function showPlanningMarkers() {}
 
-}
-
-function hidePlanningMarkers() {
-
-}
+function hidePlanningMarkers() {}
 
 function createLeafletRouting() {
     // At this time I'm unable to calculate the distance of the route which is provided by the routing plugin
