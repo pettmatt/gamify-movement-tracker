@@ -1,6 +1,5 @@
 <template>
-<ul>
-    {{ props.history ? "Statistics" : "No statistics to show" }}
+<ul v-show="props.history && props.history.length > 3">
 </ul>
 </template>
 
