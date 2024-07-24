@@ -15,13 +15,13 @@ export function formattedDate(timestamp: number): string {
         dateFormat = "d"
     if (isThisYear(zoneDate))
         dateFormat = "MMM d"
-    else 
+    else
         dateFormat = "MMM d, yyyy"
 
     return format(zoneDate, dateFormat, { timeZone })
 }
 
-export function passedTime(epoch01: number, epoch02: number): number | string {
+export function passedTime(epoch01: any, epoch02: any): number | string {
     if (!epoch01 || !epoch02) return "Cannot count time."
     return epoch01 - epoch02
 }
