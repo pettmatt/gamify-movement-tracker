@@ -17,6 +17,7 @@ const props = defineProps({
     flex-direction: column;
     justify-content: center;
     padding: 0.5em 1em;
+    width: 70vw;
     max-width: 40em;
     max-height: 80vh;
     overflow-y: scroll;
@@ -41,14 +42,14 @@ const props = defineProps({
 .top {
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important;
-    margin: 0 1em;
+    margin: 0 auto;
     position: fixed;
     top: 0;
+    width: auto !important;
 }
 .bottom {
     margin: auto;
     margin-bottom: 0.5em;
-    width: 80vw;
 }
 
 @media only screen and (max-width: 435px) {
