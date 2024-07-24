@@ -25,3 +25,15 @@ export function passedTime(epoch01: any, epoch02: any): number | string {
     if (!epoch01 || !epoch02) return "Cannot count time."
     return epoch01 - epoch02
 }
+
+export function secondFormatter(seconds: number): string {
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+    // const remainingSeconds = seconds % 60
+  
+    const hoursString = hours > 0 ? `${ hours } h ` : ""
+    const minutesString = minutes > 0 ? `${ minutes } min ` : ""
+    // const secondsString = remainingSeconds > 0 ? `${remainingSeconds}s` : ""
+  
+    return hoursString + minutesString
+}
