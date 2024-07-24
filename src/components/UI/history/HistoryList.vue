@@ -14,16 +14,17 @@
             <div>{{ index + 1 }}.</div>
             <div>{{ formattedDate(item.date) || "-" }}</div>
             <div>{{ item.category || "-" }}</div>
-            <div>{{ item.session.distance || "-" }}</div>
-            <div>{{ passedTime(item.session.endingTime, item.session.startingTime) || "-" }}</div>
+            <div>{{ meterFormatter(item.session.traveledDistance) }}</div>
+            <div>{{ secondFormatter(passedTime(item.session.endingTime, item.session.startingTime)) || "-" }}</div>
         </div>
     </li>
 </ul>
 </template>
 
 <script lang="ts" setup>
+import { meterFormatter } from "@/services/distance-service";
 import { type History } from "@/services/local-storage-service"
-import { formattedDate, passedTime } from "@/services/time-service"
+import { formattedDate, passedTime, secondFormatter } from "@/services/time-service"
 
 const props = defineProps({
     list: Array<History>
