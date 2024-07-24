@@ -14,10 +14,10 @@
             <Transition name="fade-middle">
                 <NotificationBox v-show="showNotification" :position="definePosition">
                     <TheSettings v-if="settingsStatus" />
+                    <SessionHistory v-else-if="historyStatus" />
                     <SessionMenu v-else-if="sessionStartStatus" />
                     <PlaceMarkersMenu v-else-if="placeMarkersStatus" />
                     <SettingUpSession v-else-if="settingUpSessionStatus" />
-                    <SessionHistory v-else-if="historyStatus" />
                 </NotificationBox>
             </Transition>
         </div>
