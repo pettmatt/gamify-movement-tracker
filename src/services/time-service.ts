@@ -21,6 +21,7 @@ export function formattedDate(timestamp: number): string {
     return format(zoneDate, dateFormat, { timeZone })
 }
 
-export function passedTime(epoch01: number, epoch02: number) {
+export function passedTime(epoch01: number, epoch02: number): number | string {
+    if (!epoch01 || !epoch02) return "Cannot count time."
     return epoch01 - epoch02
 }
