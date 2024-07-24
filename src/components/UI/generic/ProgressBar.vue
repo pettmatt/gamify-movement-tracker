@@ -36,7 +36,10 @@ const props = defineProps({
 })
 
 const progressWidthLeft = computed(() => {
-    return Math.min((props.progress / props.max) * 100)
+    if (props.max <= 0)
+        return 100
+    else 
+        return Math.min((props.progress / props.max) * 100)
 })
 const progressWidthRight = computed(() => {
     if (props.progress / props.max * 100 < 100)
