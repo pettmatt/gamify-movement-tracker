@@ -36,7 +36,7 @@ const time = ref<TimeObject>({
 })
 
 const timer = ref<number>(0)
-let intervalId: number | null = null
+let intervalId: ReturnType<typeof setInterval | any> = null
 
 function increaseTimer() {
     const updatedTimer = currentTime() - time.value.startingTime
@@ -52,6 +52,9 @@ function getStatistics(): History {
 
 function endSession() {
     hudStore.sessionStartStatus = false
+    hudStore.settingUpSessionStatus = false
+    hudStore.historyStatus = true
+
     sessionDetails.session.endingTime = currentTime()
     const sessionStatistics = getStatistics()
     const historyString = getItemFromLocalStorage("history") 
