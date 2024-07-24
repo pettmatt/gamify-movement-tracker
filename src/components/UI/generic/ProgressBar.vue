@@ -1,7 +1,11 @@
 <template>
 <div id="progress-bar" class="flex-horizontal">
-    <div class="left-side" :style="`width:${ progressWidthLeft }%;${ handleRightBorderRadius }`">{{ props.progress }}</div>
-    <div class="right-side" :style="`${ progressWidthRight }${ handleLeftBorderRadius }`">{{ props.max }}</div>
+    <div class="left-side" :style="`width:${ progressWidthLeft }%;${ handleRightBorderRadius }`">
+        {{ props.progressFormatted || props.progress }}
+    </div>
+    <div class="right-side" :style="`${ progressWidthRight }${ handleLeftBorderRadius }`">
+        {{ props.maxFormatted || props.max }}
+    </div>
 </div>
 </template>
 
@@ -16,6 +20,14 @@ const props = defineProps({
     max: {
         type: Number,
         required: true
+    },
+    progressFormatted: {
+        type: String,
+        required: false
+    },
+    maxFormatted: {
+        type: String,
+        required: false
     },
     allowPassingMax: {
         type: Boolean,
@@ -54,8 +66,10 @@ const handleRightBorderRadius = computed(() => {
 }
 .left-side,
 .right-side {
+    overflow-x: hidden;
     text-align: center;
     font-weight: 600;
+    word-break: keep-all;
 }
 .left-side {
     border-top-left-radius: 0.2em;
@@ -64,8 +78,6 @@ const handleRightBorderRadius = computed(() => {
     color: var(--main-background-color-light);
 }
 .right-side {
-    overflow-x: hidden;
-    min-width: 0;
     border-top-right-radius: 0.2em;
     border-bottom-right-radius: 0.2em;
     background-color: var(--main-background-color);

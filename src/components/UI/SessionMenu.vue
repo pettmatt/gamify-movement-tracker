@@ -1,8 +1,8 @@
 <template>
 <h2>Current session</h2>
 
-<ProgressBar v-if="distances.goal" :progress="distances.current || 0" :max="distances.goal || 0" />
-<ProgressBar v-if="distances.goal" :progress="timer" :max="time.goalEndingTime" />
+<ProgressBar v-if="distances.goal" :progress="distances.current || 0" :max="distances.goal" :progress-formatted="meterFormatter(distances.current || 0)" :max-formatted="meterFormatter(distances.goal * 1000)" />
+<ProgressBar v-if="distances.goal" :progress="timer" :max="time.goalEndingTime" :progress-formatted="secondFormatter(timer)" :max-formatted="secondFormatter(time.goalEndingTime)" />
 
 <button @click="endSession">End the session</button>
 </template>
@@ -10,7 +10,8 @@
 <script setup lang="ts">
 import ProgressBar from "./generic/ProgressBar.vue"
 import { addItemToLocalStorage, convertStringValue, getItemFromLocalStorage, type History } from "@/services/local-storage-service"
-import { currentTime } from "@/services/time-service"
+import { meterFormatter } from "@/services/distance-service"
+import { currentTime, secondFormatter } from "@/services/time-service"
 import { hudStore, sessionDetails } from "@/stores/hud-store"
 import { onMounted, onUnmounted, ref } from "vue"
 
@@ -26,12 +27,12 @@ interface TimeObject {
 
 const distances = ref<DistanceObject>({
     current: sessionDetails.session.traveledDistance,
-    goal: sessionDetails.goal.distance
+    goal: sessionDetails.specifySessionLength ? sessionDetails.goal.distance : 0
 })
 
 const time = ref<TimeObject>({
     startingTime: sessionDetails.session.startingTime || 0,
-    goalEndingTime: sessionDetails.goal.time || 0
+    goalEndingTime: sessionDetails.goal.time && sessionDetails.goal.time * 60 || 0
 })
 
 const timer = ref<number>(0)
