@@ -9,7 +9,7 @@
             <div>Time</div>
         </div>
     </li>
-    <li class="flex-body" v-for="(item, index) in props.list" :key="index">
+    <li class="flex-body" v-show="props.list" v-for="(item, index) in props.list" :key="index">
         <div class="flex-horizontal">
             <div>{{ index + 1 }}.</div>
             <div>{{ formattedDate(item.date) || "-" }}</div>

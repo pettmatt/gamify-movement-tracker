@@ -5,7 +5,7 @@
     <HistorySummary :history="historyStatistics" />
 </div>
 
-<div class="previous-sessions" v-show="historyStatistics">
+<div class="previous-sessions">
     <HistoryList :list="historyStatistics" />
 </div>
 </template>
