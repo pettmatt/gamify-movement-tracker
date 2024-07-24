@@ -17,6 +17,10 @@ const props = defineProps({
         type: String,
         default: "Label"
     },
+    showLabel: {
+        type: Boolean,
+        default: true
+    },
     icons: {
         type: Object,
         default: () => ({ default: null, checked: null })
@@ -35,7 +39,9 @@ const isHovering = ref<boolean>(false)
 const currentIcon = computed(() => (props.value ? props.icons.checked : props.icons.default))
 
 function handleMouseOver(value: boolean) {
-    if (!props.value)
+    if (!props.showLabel)
+        isHovering.value = false
+    else if (!props.value)
         isHovering.value = value
 }
 

@@ -26,18 +26,21 @@
                 <div class="panel-container" v-show="visibilityBottom">
                     <ToggleButton
                         :label="'History'"
+                        :showLabel="showLabel"
                         :icons="{ default: BIconClockHistory, checked: BIconClockFill }"
                         :value="Boolean(hudStore.historyStatus)"
                         :storeUpdateFunction="() => resetHudMainButtons('historyStatus')"
                     />
                     <ToggleButton
                         :label="'Session'"
+                        :showLabel="showLabel"
                         :icons="{ default: BIconDiamond, checked: BIconDiamondFill }"
                         :value="Boolean(hudStore.settingUpSessionStatus)"
                         :storeUpdateFunction="() => resetHudMainButtons('settingUpSessionStatus')"
                     />
                     <ToggleButton
                         :label="'Settings'"
+                        :showLabel="showLabel"
                         :icons="{ default: BIconGear, checked: BIconGearFill }"
                         :value="Boolean(hudStore.settingsStatus)"
                         :storeUpdateFunction="() => resetHudMainButtons('settingsStatus')"
@@ -59,7 +62,7 @@ import SessionMenu from "./UI/SessionMenu.vue"
 import TheSettings from "./UI/TheSettings.vue"
 import PlaceMarkersMenu from "./UI/PlaceMarkersMenu.vue"
 import SettingUpSession from "./UI/SettingUpSession.vue"
-import NotificationBox from "./UI/NotificationBox.vue"
+import NotificationBox from "./UI/generic/NotificationBox.vue"
 import SessionHistory from "./UI/SessionHistory.vue"
 
 const unit = ref(settingsStore.settings.appFunctionality.general.unit)
@@ -74,23 +77,29 @@ const historyStatus = ref<boolean>(hudStore.historyStatus)
 
 const definePosition = computed(() => {
     let position = null
-    if (hudStore.placeMarkersStatus) {
+    if (hudStore.placeMarkersStatus && (!hudStore.settingsStatus && !hudStore.historyStatus))
         position = "top"
-    }
     else {
-        if (hudStore.sessionStartStatus) {
+        if (hudStore.sessionStartStatus)
             position = "bottom"
-        }
-        else {
+        else
             position = "default"
-        }
     }
 
     return position
 })
 
+const showLabel = computed(() => {
+    let show = true
+    if (hudStore.sessionStartStatus && (hudStore.settingUpSessionStatus || hudStore.settingsStatus || hudStore.historyStatus))
+        show = false
+
+    return show
+})
+
 const showNotification = computed(() => {
-    return (hudStore.sessionStartStatus && hudStore.settingUpSessionStatus) || hudStore.settingUpSessionStatus || hudStore.placeMarkersStatus || hudStore.settingsStatus || hudStore.historyStatus
+    console.log((hudStore.sessionStartStatus && hudStore.settingUpSessionStatus), (hudStore.placeMarkersStatus && hudStore.settingUpSessionStatus), hudStore.settingUpSessionStatus, hudStore.settingsStatus, hudStore.historyStatus)
+    return (hudStore.sessionStartStatus && hudStore.settingUpSessionStatus) || (hudStore.placeMarkersStatus && hudStore.settingUpSessionStatus) || hudStore.settingUpSessionStatus || hudStore.settingsStatus || hudStore.historyStatus
 })
 
 function resetHudMainButtons(currentButton: keyof DynamicHudStoreInterface) {
@@ -201,6 +210,7 @@ watch(() => hudStore.historyStatus, (newValue) => {
 #interface-hud .panel-middle {
     height: 100%;
     display: flex;
+    justify-content: center;
     flex-direction: row;
     flex: 1 1 auto;
 }
