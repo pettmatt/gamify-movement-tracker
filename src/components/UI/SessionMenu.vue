@@ -1,8 +1,8 @@
 <template>
 <h2>Current session</h2>
 
-<ProgressBar v-if="distances.goal" :progress="distances.current || 0" :max="distances.goal" :progress-formatted="meterFormatter(distances.current || 0)" :max-formatted="meterFormatter(distances.goal * 1000)" />
-<ProgressBar v-if="distances.goal" :progress="timer" :max="time.goalEndingTime" :progress-formatted="secondFormatter(timer)" :max-formatted="secondFormatter(time.goalEndingTime)" />
+<ProgressBar :progress="distances.current || 0" :max="distances.goal || 0" :progress-formatted="meterFormatter(distances.current || 0)" :max-formatted="meterFormatter(distances.goal || 0 * 1000)" />
+<ProgressBar :progress="timer" :max="time.goalEndingTime" :progress-formatted="secondFormatter(timer)" :max-formatted="secondFormatter(time.goalEndingTime)" />
 
 <button @click="endSession">End the session</button>
 </template>
@@ -32,7 +32,7 @@ const distances = ref<DistanceObject>({
 
 const time = ref<TimeObject>({
     startingTime: sessionDetails.session.startingTime || 0,
-    goalEndingTime: sessionDetails.goal.time && sessionDetails.goal.time * 60 || 0
+    goalEndingTime: sessionDetails.goal.time ? sessionDetails.goal.time * 60 : 0
 })
 
 const timer = ref<number>(0)
