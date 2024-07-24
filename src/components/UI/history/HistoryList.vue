@@ -1,12 +1,21 @@
 <template>
 <ul class="flex-vertical">
-    <li v-for="(item, index) in props.list" :key="index">
-        <div class="history-list-item flex-horizontal">
+    <li class="flex-header">
+        <div class="flex-horizontal">
+            <div>#</div>
+            <div>Date</div>
+            <div>Category</div>
+            <div>Distance</div>
+            <div>Time</div>
+        </div>
+    </li>
+    <li class="flex-body" v-for="(item, index) in props.list" :key="index">
+        <div class="flex-horizontal">
             <div>{{ index + 1 }}.</div>
-            <div>{{ formattedDate(item.date) }}</div>
-            <div>{{ item.category }}</div>
-            <div>{{ item.session.distance }}</div>
-            <div>{{ passedTime(item.session.endingTime, item.session.startingTime) }}</div>
+            <div>{{ formattedDate(item.date) || "-" }}</div>
+            <div>{{ item.category || "-" }}</div>
+            <div>{{ item.session.distance || "-" }}</div>
+            <div>{{ passedTime(item.session.endingTime, item.session.startingTime) || "-" }}</div>
         </div>
     </li>
 </ul>
@@ -27,5 +36,24 @@ ul {
 }
 ul li {
     list-style-type: none;
+}
+
+ul .flex-header .flex-horizontal {
+    font-weight: bold;
+}
+
+ul .flex-horizontal {
+    justify-content: center;
+}
+
+ul .flex-horizontal > div:nth-child(1) {
+    width: 2em;
+}
+ul .flex-horizontal > div:nth-child(2),
+ul .flex-horizontal > div:nth-child(3),
+ul .flex-horizontal > div:nth-child(4),
+ul .flex-horizontal > div:nth-child(5) {
+    width: 22%;
+    max-width: 7em;
 }
 </style>
