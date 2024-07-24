@@ -21,7 +21,7 @@
             </ul>
         </div>
 
-        <div>
+        <!-- <div>
             <h3>Map</h3>
             <ul>
                 General
@@ -33,7 +33,7 @@
                     Allow application to use third-party services <input type="checkbox" v-model="appSettings.appFunctionality.services.allowThirdPartyServices" name="allowThirdPartyServices" />
                 </li>
             </ul>
-        </div>
+        </div> -->
     </div>
 </div>
 </template>
