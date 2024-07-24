@@ -24,12 +24,13 @@ const props = defineProps({
 })
 
 const progressWidthLeft = computed(() => {
-    return Math.min((props.progress / props.max) * 200)
+    return Math.min((props.progress / props.max) * 100)
 })
 const progressWidthRight = computed(() => {
-    if (props.progress / props.max * 100 >= 100)
-        return "width: 0;"
-    return "flex-grow: 1;"
+    if (props.progress / props.max * 100 < 100)
+        return `width:${ Math.min(100 - (props.progress / props.max) * 100) }%;`
+    else
+        return `display: none;`
 })
 
 const handleLeftBorderRadius = computed(() => {
