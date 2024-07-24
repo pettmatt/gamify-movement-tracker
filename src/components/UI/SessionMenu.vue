@@ -12,7 +12,7 @@ import ProgressBar from "./generic/ProgressBar.vue"
 import { addItemToLocalStorage, convertStringValue, getItemFromLocalStorage, type History } from "@/services/local-storage-service"
 import { currentTime } from "@/services/time-service"
 import { hudStore, sessionDetails } from "@/stores/hud-store"
-import { computed, onMounted, onUnmounted, ref } from "vue"
+import { onMounted, onUnmounted, ref } from "vue"
 
 interface DistanceObject {
     current: null | undefined | number,
