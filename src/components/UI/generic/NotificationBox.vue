@@ -20,7 +20,6 @@ const props = defineProps({
     width: 70vw;
     max-width: 40em;
     max-height: 80vh;
-    overflow-y: scroll;
     color: #ddd;
     background: var(--main-background-color-light);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
