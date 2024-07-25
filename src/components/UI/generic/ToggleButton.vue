@@ -3,7 +3,7 @@
     <div class="hover-element" v-show="isHovering">
         <small>{{ label }}</small>
     </div>
-    <button :id="`button-${label.toLowerCase()}`" :class="{ highlight: value }" @click="props.storeUpdateFunction" @mouseenter="handleMouseOver(true)" @mouseleave="handleMouseOver(false)">
+    <button :aria-label="label.toLocaleLowerCase()" :id="`button-${label.toLowerCase()}`" :class="{ highlight: value }" @click="props.storeUpdateFunction" @mouseenter="handleMouseOver(true)" @mouseleave="handleMouseOver(false)">
         <component :is="currentIcon" class="icon" />
     </button>
 </div>
