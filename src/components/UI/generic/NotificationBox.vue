@@ -24,6 +24,7 @@ const props = defineProps({
     color: #ddd;
     background: var(--main-background-color-light);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
 }
 #notification-box {
     pointer-events: all;
