@@ -1,6 +1,6 @@
-# gamify-movement-vue
+# gamify-movement
 
-This template should help get you started developing with Vue 3 in Vite.
+The application is still "a work in progress" and is aimed to be an cardio exercise application that can visualize the progress of a person. Btw. Best experience is achieved by using Firefox. Chrome works, but it has some visual issues.
 
 ## Recommended IDE Setup
 
