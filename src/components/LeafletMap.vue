@@ -17,6 +17,7 @@ import "leaflet/dist/leaflet.css"
 import * as LeafletRouting from "../services/leaflet-routing-machine"
 import * as mapUtils from "../utils/map-utils"
 import type { Waypoints, UserTracking, DistanceProvider } from "../interfaces/map-interfaces"
+import { createPromptBeforeExitHook, removePromptBeforeExitHook } from "@/services/browser-service"
 
 const map = ref<any>()
 const generatedRoute = ref<any>(null)
@@ -119,6 +120,7 @@ function createMap(container: any) {
             console.log("Starting geotracking")
             map.value.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true })
             map.value.on("locationfound", (e: any) => {
+                createPromptBeforeExitHook()
                 userTracking.value.currentLocation = L.marker()
                 // Locate and show user's location immediately
                 trackUser(e)
@@ -137,6 +139,7 @@ function createMap(container: any) {
         }
 
         else {
+            removePromptBeforeExitHook()
             clearTrackingHistory(map)
             clearMapMarkersAndPolylines(map)
             clearTimeout(trackingInterval)
