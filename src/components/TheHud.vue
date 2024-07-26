@@ -116,13 +116,20 @@ function resetHudMainButtons(currentButton: keyof DynamicHudStoreInterface) {
     hudStore[currentButton] = !hudStore[currentButton]
 }
 
-function addInactivityTimers() {
-    inactivity.value = setTimeout(() => {
-        /* Disable UI elements if screen is inactive.
-        This should NOT override settings. */
-        hideUIElements()
-    }, 10000)
+function checkHudBottomFadeSettings() {
+    if (settingsStore.settings.menus.functionality.enableIdle && settingsStore.settings.menus.display.fadeBottomOnIdle)
+        return true
+    return false
+}
 
+function setInActivityTimer() {
+    /* Disable UI elements if screen is inactive.
+    This should NOT override settings. */
+    inactivity.value = setTimeout(hideUIElements, settingsStore.settings.menus.functionality.idleTimer * 1000)
+}
+
+function addInactivityTimers() {
+    setInActivityTimer()
     window.addEventListener("click", resetTimer)
     window.addEventListener("keydown", resetTimer)
     window.addEventListener("mousemove", resetTimer)
@@ -142,12 +149,13 @@ function removeInactivityTimers() {
 function resetTimer() {
     showUIElements()
     clearTimeout(inactivity.value)
-    inactivity.value = setTimeout(hideUIElements, 10000)
+    setInActivityTimer()
 }
 
 function hideUIElements() {
     if (!hudStore.placeMarkersStatus && !hudStore.settingsStatus && !hudStore.historyStatus && !hudStore.settingUpSessionStatus && !hudStore.historyStatus)
-        visibilityBottom.value = false
+        if (checkHudBottomFadeSettings())
+            visibilityBottom.value = false
 }
 
 function showUIElements() {
