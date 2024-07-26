@@ -24,10 +24,6 @@
         <!-- <div>
             <h3>Map</h3>
             <ul>
-                General
-                <li>Support offline mode <input type="checkbox" v-model="appSettings.appFunctionality.general.offlineMode" name="offlineMode" /></li>
-            </ul>
-            <ul>
                 Services
                 <li>
                     Allow application to use third-party services <input type="checkbox" v-model="appSettings.appFunctionality.services.allowThirdPartyServices" name="allowThirdPartyServices" />
