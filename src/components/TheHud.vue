@@ -165,9 +165,7 @@ watch(() => settingsStore.settings.appFunctionality.general.unit, (newUnit: stri
 })
 
 function delayedMenuAction(customFunction: Function, value: boolean) {
-    const menuStatuses = [settingsStatus.value, placeMarkersStatus.value, settingUpSessionStatus.value]
-    const activeMenus = menuStatuses.filter(boolean => boolean === true)
-    if (!value && activeMenus.length < 1)
+    if (!value)
         setTimeout(customFunction, 400) // The time delay should be updated if the animation length is changed
     else
         customFunction()
