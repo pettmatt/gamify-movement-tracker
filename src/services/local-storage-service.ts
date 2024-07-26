@@ -19,3 +19,20 @@ export function ifNullUseDefaultValue(value: any, defaultValue: any) {
 export interface History extends SessionDetailsInterface {
     date: number
 }
+
+export function synchronizeLocalStorage(settings: any) {
+    // console.log("=============================")
+    // console.log("Settings, synchronizeLocalStorage, settings:", settings)
+    for (const property in settings) {
+        const value = settings[property]
+        if (typeof value === "object") {
+            // console.log("Settings, setting property is object", value)
+            synchronizeLocalStorage(value)
+        }
+
+        else {
+            console.log(`Pushed to local storage: "${ property }: ${ value }"`)
+            addItemToLocalStorage(property, value)
+        }
+    }
+}
