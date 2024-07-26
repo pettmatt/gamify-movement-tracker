@@ -9,6 +9,8 @@ export const hudStore = reactive<DynamicHudStoreInterface>({
     placeMarkersStatus: false,
     settingsStatus: false,
     historyStatus: false,
+    // List
+    historyList: ifNullUseDefaultValue(convertStringValue(getItemFromLocalStorage("history")), []),
     // Functions
     removeMarkersFunction: undefined,
     createRouteFunction: undefined,
@@ -46,10 +48,10 @@ export const settingsStore = reactive({
         menus: {
             display: {
                 fadeTopOnIdle: ifNullUseDefaultValue(convertStringValue(getItemFromLocalStorage("fadeTopOnIdle")), true),
-                fadeBottomOnIdle: ifNullUseDefaultValue(Boolean(getItemFromLocalStorage("fadeBottomOnIdle")), true)
+                fadeBottomOnIdle: ifNullUseDefaultValue(convertStringValue(getItemFromLocalStorage("fadeBottomOnIdle")), true)
             },
             functionality: {
-                enableIdle: ifNullUseDefaultValue(convertStringValue(getItemFromLocalStorage("fadeBottomOnIdle")), true),
+                enableIdle: ifNullUseDefaultValue(convertStringValue(getItemFromLocalStorage("enableIdle")), true),
                 idleTimer: ifNullUseDefaultValue(getItemFromLocalStorage("idleTimer"), 10)
             }
         },
