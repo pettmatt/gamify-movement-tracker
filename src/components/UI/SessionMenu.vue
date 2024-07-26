@@ -9,7 +9,6 @@
 
 <script setup lang="ts">
 import ProgressBar from "./generic/ProgressBar.vue"
-import { addItemToLocalStorage, convertStringValue, getItemFromLocalStorage, type History } from "@/services/local-storage-service"
 import { meterFormatter } from "@/services/distance-service"
 import { currentTime, secondFormatter } from "@/services/time-service"
 import { hudStore, sessionDetails } from "@/stores/hud-store"
@@ -57,10 +56,9 @@ function endSession() {
 
     sessionDetails.session.endingTime = currentTime()
     const sessionStatistics = getStatistics()
-    const historyString = getItemFromLocalStorage("history") 
-    const history: History[] | [] = convertStringValue(historyString || "[]")
+    const history = hudStore.historyList
     history.unshift(sessionStatistics)
-    addItemToLocalStorage("history", JSON.stringify(history))
+    hudStore.historyList = history
 }
 
 onMounted(() => {

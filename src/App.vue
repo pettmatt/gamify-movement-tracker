@@ -9,7 +9,7 @@ import { addItemToLocalStorage, synchronizeLocalStorage } from "./services/local
 // Handles updating the local storage, so the local storage logic can be centralized in one spot. Individual components should only make changes to the application's store values.
 watch(() => hudStore.historyList, (updatedList) => {
 	addItemToLocalStorage("history", JSON.stringify(updatedList))
-})
+}, { deep: true })
 watch(() => settingsStore.settings, (updatedSettings) => {
 	synchronizeLocalStorage(updatedSettings)
 }, { deep: true })
