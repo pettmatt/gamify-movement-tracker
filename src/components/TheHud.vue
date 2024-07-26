@@ -74,6 +74,7 @@ const sessionStartStatus = ref<boolean>(hudStore.sessionStartStatus)
 const placeMarkersStatus = ref<boolean>(hudStore.placeMarkersStatus)
 const settingUpSessionStatus = ref<boolean>(hudStore.settingUpSessionStatus)
 const historyStatus = ref<boolean>(hudStore.historyStatus)
+let wasActiveButton = false
 
 const definePosition = computed(() => {
     let position = null
@@ -90,11 +91,10 @@ const definePosition = computed(() => {
 })
 
 const showLabel = computed(() => {
-    let show = true
     if (hudStore.sessionStartStatus && (hudStore.settingUpSessionStatus || hudStore.settingsStatus || hudStore.historyStatus))
-        show = false
+        return false
 
-    return show
+    return true
 })
 
 const showNotification = computed(() => {
@@ -105,11 +105,15 @@ function resetHudMainButtons(currentButton: keyof DynamicHudStoreInterface) {
     const mainButtonVariables = ["settingsStatus", "historyStatus", "settingUpSessionStatus"]
 
     mainButtonVariables.forEach(variableName => {
-        if (currentButton === variableName)
-            hudStore[currentButton] = !hudStore[currentButton]
-        else
-            hudStore[variableName] = false
+        if (currentButton !== variableName) {
+            if (hudStore[variableName]) {
+                hudStore[variableName] = false
+                wasActiveButton = true
+            }
+        }
     })
+
+    hudStore[currentButton] = !hudStore[currentButton]
 }
 
 function addInactivityTimers() {
@@ -165,10 +169,12 @@ watch(() => settingsStore.settings.appFunctionality.general.unit, (newUnit: stri
 })
 
 function delayedMenuAction(customFunction: Function, value: boolean) {
-    if (!value)
+    if (!value && !wasActiveButton)
         setTimeout(customFunction, 400) // The time delay should be updated if the animation length is changed
-    else
+    else {
+        wasActiveButton = false
         customFunction()
+    }
 }
 
 watch(() => hudStore.settingsStatus, (newValue) => {
