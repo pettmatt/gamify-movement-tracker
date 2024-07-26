@@ -28,11 +28,16 @@ export function passedTime(epoch01: number, epoch02: number): number | string {
 export function secondFormatter(seconds: number): string {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    // const remainingSeconds = seconds % 60
+    const remainingSeconds = seconds % 60
   
     const hoursString = hours > 0 ? `${ hours } h ` : ""
     const minutesString = minutes > 0 ? `${ minutes } min ` : ""
-    // const secondsString = remainingSeconds > 0 ? `${remainingSeconds}s` : ""
+    const secondsString = remainingSeconds > 0 ? `${remainingSeconds}s` : ""
   
-    return hoursString + minutesString
+    let time = hoursString + minutesString
+
+    if (minutesString || hoursString)
+        time += secondsString
+
+    return time
 }

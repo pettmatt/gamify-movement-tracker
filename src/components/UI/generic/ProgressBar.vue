@@ -1,10 +1,10 @@
 <template>
 <div id="progress-bar" class="flex-horizontal">
-    <div class="left-side" :style="`width:${ progressWidthLeft }%;${ handleRightBorderRadius }`">
-        {{ props.progressFormatted || props.progress }}
+    <div class="left-side" :class="checkIfSingle(progressWidthLeft)" :style="`width:${ progressWidthLeft }%;${ handleRightBorderRadius }`">
+        {{ (props.progressFormatted) ? props.progressFormatted : props.progress }}
     </div>
-    <div class="right-side" :style="`${ progressWidthRight }${ handleLeftBorderRadius }`">
-        {{ props.maxFormatted || props.max }}
+    <div class="right-side" :class="checkIfSingle(progressWidthRight)" :style="`${ progressWidthRight }${ handleLeftBorderRadius }`">
+        {{ (props.maxFormatted) ? props.maxFormatted : props.max }}
     </div>
 </div>
 </template>
@@ -48,6 +48,14 @@ const progressWidthRight = computed(() => {
         return `display: none;`
 })
 
+function checkIfSingle(value: number | string) {
+    if (typeof value == "string")
+        return ""
+    else if (value >= 100)
+        return "single"
+    return ""
+}
+
 const handleLeftBorderRadius = computed(() => {
     if (progressWidthLeft.value < 1)
         return `border-top-left-radius:0.2em;border-bottom-left-radius:0.2em;`
@@ -70,19 +78,27 @@ const handleRightBorderRadius = computed(() => {
 .left-side,
 .right-side {
     overflow-x: hidden;
-    text-align: center;
+    white-space: nowrap;
     font-weight: 600;
     word-break: keep-all;
 }
 .left-side {
+    text-align: left;
+    padding-left: 0.5em;
     border-top-left-radius: 0.2em;
     border-bottom-left-radius: 0.2em;
     background-color: aliceblue;
     color: var(--main-background-color-light);
 }
 .right-side {
+    text-align: right;
+    padding-right: 0.5em;
     border-top-right-radius: 0.2em;
     border-bottom-right-radius: 0.2em;
     background-color: var(--main-background-color);
+}
+.single {
+    text-align: center;
+    padding: 0;
 }
 </style>

@@ -177,7 +177,7 @@ watch(() => settingsStore.settings.appFunctionality.general.unit, (newUnit: stri
 })
 
 function delayedMenuAction(customFunction: Function, value: boolean) {
-    if (!value && !wasActiveButton)
+    if (!value && !wasActiveButton && !placeMarkersStatus.value)
         setTimeout(customFunction, 400) // The time delay should be updated if the animation length is changed
     else {
         wasActiveButton = false
