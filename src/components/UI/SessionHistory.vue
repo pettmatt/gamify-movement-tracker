@@ -11,19 +11,14 @@
 </template>
 
 <script setup lang="ts">
-import { convertStringValue, getItemFromLocalStorage, type History } from "@/services/local-storage-service"
-import { onMounted, ref } from "vue"
+import { ref } from "vue"
+import { hudStore } from "@/stores/hud-store"
 import HistorySummary from "./history/HistorySummary.vue"
 import HistoryList from "./history/HistoryList.vue"
 
-const historyStatistics = ref<History[] | null>()
+const historyStatistics = ref<History[] | null | undefined>(hudStore.historyList)
 
 function viewSessionPath(sessionId: number) {}
-
-onMounted(() => {
-    const sessionHistory: string | null = getItemFromLocalStorage("history")
-    historyStatistics.value = convertStringValue(sessionHistory)
-})
 </script>
 
 <style scoped>
