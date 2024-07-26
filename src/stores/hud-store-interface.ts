@@ -1,4 +1,5 @@
 import type { Waypoints } from "@/interfaces/map-interfaces"
+import type { History } from "@/services/local-storage-service"
 
 export interface HudStoreInterface {
     // Booleans
@@ -7,6 +8,8 @@ export interface HudStoreInterface {
     placeMarkersStatus: boolean,
     settingsStatus: boolean,
     historyStatus: boolean,
+    // List
+    historyList: undefined | History[],
     // Functions
     removeMarkersFunction: undefined | Function,
     createRouteFunction: undefined | Function,
@@ -15,7 +18,7 @@ export interface HudStoreInterface {
     getMapStatistics: undefined | Function,
 }
 
-type HudStoreInterfaceValues = number | boolean | Function | Waypoints | undefined
+type HudStoreInterfaceValues = number | boolean | History[] | Function | Waypoints | undefined
 export interface DynamicHudStoreInterface extends HudStoreInterface {
     [key: string]: HudStoreInterfaceValues
 }
