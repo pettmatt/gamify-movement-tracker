@@ -61,7 +61,7 @@ watch(() => props.value, (value) => {
 }
 
 button {
-    pointer-events: all;
+    pointer-events: painted;
     border-radius: 1.5rem;
 }
 button svg {
