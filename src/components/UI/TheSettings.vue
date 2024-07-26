@@ -36,7 +36,6 @@
 
 <script lang="ts" setup>
 import { ref, watch } from "vue"
-import { addItemToLocalStorage } from "@/services/local-storage-service"
 import { settingsStore } from "@/stores/hud-store"
 
 const appSettings = ref(settingsStore.settings)
@@ -44,27 +43,8 @@ console.log("Application settings:", appSettings.value)
 
 watch(() => appSettings, () => {
     settingsStore.settings = appSettings.value
-    /* Other components are going to use the store as the source for the settings, so let's use it as well. This can minimize possible issues in the future or at least makes debugging easier. */
-    synchronizeLocalStorage(settingsStore.settings)
-    console.log("Application settings has been changed:", appSettings)
+    console.log("Application settings has been changed:", settingsStore.settings)
 }, { deep: true })
-
-function synchronizeLocalStorage(settings: any) {
-    // console.log("=============================")
-    // console.log("Settings, synchronizeLocalStorage, settings:", settings)
-    for (const property in settings) {
-        const value = settings[property]
-        if (typeof value === "object") {
-            // console.log("Settings, setting property is object", value)
-            synchronizeLocalStorage(value)
-        }
-
-        else {
-            console.log(`Settings, push to local storage: "${ property }: ${ value }"`)
-            addItemToLocalStorage(property, value)
-        }
-    }
-}
 </script>
 
 <style scoped>
