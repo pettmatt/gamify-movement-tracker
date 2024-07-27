@@ -1,5 +1,4 @@
 import type { Waypoints } from "@/interfaces/map-interfaces"
-import type { History } from "@/services/local-storage-service"
 
 export interface HudStoreInterface {
     // Booleans
@@ -46,4 +45,8 @@ export interface SessionDetailsInterface {
         startingTime: undefined | number,
         endingTime: undefined | number
     }
+}
+
+export interface History extends SessionDetailsInterface {
+    date: number
 }
